@@ -25,12 +25,26 @@ def login_required(f):
 			if not serialized_token: raise Exception("No token, sign in")
 			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
 			user = User.objects(id=user_id).first()
-			if not user: raise Exception("User not found")
 		except Exception as e:
 			logger.info(e)
-			return redirect(request.app.url_for('auth.login_page'))
-
+			return redirect(request.app.url_for('login_page'))
+		return f(request, user, *args, **kwargs)
 	return decorated_function
+
+def is_user_logged_in(f):
+	@wraps(f)
+	def decorated_function(request, *args, **kwargs):
+		try:
+			serialized_token = request.cookies.get("token")
+			if not serialized_token: raise Exception("No token, sign in")
+			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
+			user = User.objects(id=user_id).first()
+		except Exception as e:
+			logger.info(e)
+			return f(request, False, *args, **kwargs)
+		return f(request, True, *args, **kwargs)
+	return decorated_function
+
 
 def failure_message(f):
 	@wraps(f)
@@ -65,11 +79,8 @@ def failure_message(f):
 @auth.route("/forgot", methods=["GET"])
 @failure_message
 async def forgot_password_page(request, message):
-	template = request.app.request.app.env.get_template("template.html")
-	return html(template.render(
-		pageName="forgot.html", 
-		pageScript="/assets/js/min/auth.min.js",
-		alert_message=message))
+	template = request.app.request.app.env.get_template("forgot_password.html")
+	return html(template.render())
 
 @auth.route("/forgot", methods=["POST"])
 async def forgot_password(request):
@@ -127,10 +138,8 @@ async def reset_password_page(request, token):
 	except Exception as e:
 		return html("<p>Invalid token</p><a href='/'>Back</a>")
 	
-	template = request.app.request.app.env.get_template("template.html")
-	return html(template.render(
-		pageName="change-password.html", 
-		pageScript=""))
+	template = request.app.request.app.env.get_template("change-password.html")
+	return html(template.render())
 
 @auth.route("/reset_password/<token>", methods=["POST"])
 async def reset_password(request, token):
@@ -268,7 +277,7 @@ async def login(request):
 		temp_token = url_safe_serializer.dumps(str(user.id))
 		return redirect(request.app.url_for("auth.send_verification_email", token=temp_token))
 
-	response = redirect(request.app.url_for("root"))
+	response = redirect(request.app.url_for("landing_page"))
 	serializer = TimedJSONWebSignatureSerializer(config.JWT_SECRET, expires_in=60*60*24)
 	access_token = serializer.dumps({"user_id": str(user.id)})
 	response.cookies["token"] = access_token.decode()
@@ -278,7 +287,7 @@ async def login(request):
 
 @auth.route("/logout")
 async def logout(request):
-	response = redirect(request.app.url_for("root"))
+	response = redirect(request.app.url_for("landing_page"))
 	del response.cookies["token"]
 	return response
 

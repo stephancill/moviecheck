@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/watchlist.css">
+{% endblock %}
+
+{% block title %}Watchlist{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section class="watchlist-container">
+        <div class="watchlist-title row">
+            <img src="/static/img/watchlist/tv-icon.svg" alt="television">
+            <h1>{{user.first_name}}'s Watchlist</h1>
+        </div>
+        <div class="watchlist-body"></div>
+    </section>
+
+</div>
+
+{% endblock %}

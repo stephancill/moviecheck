@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from loguru import logger
 from models.user import User
 from routes import api
-from routes.auth import login_required
+from routes.auth import login_required, is_user_logged_in
 import sanic
 from sanic.response import html, text, json, redirect
 import smtplib
@@ -24,18 +24,27 @@ env.globals["url_for"] = app.url_for
 app.env = env
 
 @app.route("/")
-async def landing_page(request):
-	template = env.get_template("landing-page.html")
-	return html(template.render())
+@is_user_logged_in
+async def landing_page(request, is_logged_in):
+	if is_logged_in:
+		return redirect(app.url_for("watchlist_page"))
+	else:
+		template = env.get_template("landing-page.html")
+		return html(template.render())
 
-@app.route("/home")
+@app.route("/watchlist")
 @login_required
-async def landing_page(request, user):
-	template = env.get_template("index.html")
-	return html(template.render(
-		user=user,
-		tag=request.args.get("tag")
-	))
+async def watchlist_page(request, user):
+	logger.debug(user)
+	template = env.get_template("watchlist.html")
+	return html(template.render(user=user))
+
+@app.route("/account")
+@login_required
+async def account_page(request, user):
+	logger.debug(user)
+	template = env.get_template("account.html")
+	return html(template.render(user=user))
 
 @app.route("/signup")
 async def register_page(request):

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/account.css">
+{% endblock %}
+
+{% block title %}Watchlist{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section>
+        <a href="{{url_for('auth.logout')}}"><button class="cta-button">Sign out</button></a>
+    </section>
+
+</div>
+
+{% endblock %}

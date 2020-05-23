@@ -25,21 +25,31 @@
 				<div class="collapse navbar-collapse" id="navbarText">
 					<ul class="navbar-nav ml-auto">
 						{% if user is not defined %}
+						<!-- TODO: Set .active class on active link -->
 						<li>
-							<a class="nav-link text-dark " href="#features">Features</a>
+							<a class="nav-link text-dark" href="#features">Features</a>
 						</li>
 						<li>
-							<a class="nav-link text-dark " href="{{url_for('login_page')}}">Sign in</a>
+							<a class="nav-link text-dark" href="{{url_for('login_page')}}">Sign in</a>
 						</li>
 						{% else %}
 						<li>
-							<a class="nav-link text-dark " href="/watchlist">Home</a>
+							<a class="nav-link text-dark" href="{{url_for('watchlist_page')}}">
+								<img src="/static/img/nav/tv-icon.svg" alt="television">
+								Watchlist
+							</a>
 						</li>
 						<li>
-							<a class="nav-link text-dark " href="/explore">Explore</a>
+							<a class="nav-link text-dark" href="/explore">
+								<img src="/static/img/nav/discover-icon.svg" alt="magnifying glass">
+								Explore
+							</a>
 						</li>
 						<li>
-							<a class="nav-link text-dark " href="/account">{{user.first_name}}</a>
+							<a class="nav-link text-dark" href="/account">
+								<img src="/static/img/nav/user-icon.svg" alt="magnifying glass">
+								{{user.first_name}}
+							</a>
 						</li>
 						{% endif %}
 					</ul>
