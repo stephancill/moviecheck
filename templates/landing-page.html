@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/landing-page.css">
+{% endblock %}
+
+{% block title %}MovieCheck{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+	<section class=" mx-auto mx-xl-0 mx-lg-0 mx-md-0">
+		<div class="cta-body">
+			<h1>Your personal entertainment portfolio.</h1>
+			<h3>Movie Check keeps track of movies you've <strong>seen</strong> and <strong>want to see</strong>.</h3>
+			<a href="/auth/register" class="cta-button-wrapper"><div class="cta-button"><p>Sign up for free</p></div></a>
+			<a href="/auth/login">Already have an account?</a>
+		</div>
+		<div class="cover-container">
+			<img src="https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
+			<img src="https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
+			<img src="https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
+			<img src="https://m.media-amazon.com/images/M/MV5BOTg4ZTNkZmUtMzNlZi00YmFjLTk1MmUtNWQwNTM0YjcyNTNkXkEyXkFqcGdeQXVyNjg2NjQwMDQ@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
+		</div>
+	</section>
+</div>
+<section class="features-container">
+	<div id="features" class="container">
+		<div class="features-body">
+			<h1>Features</h1>
+			<div class="row">
+				<div class="col mt-auto">
+					<img src="/static/img/checkmark-icon.svg" alt="Checkmark">
+					<h2>Seen</h2>
+					<p>Keep track of which movies you’ve seen and what you thought of them.</p>
+				</div>
+				<div class="col mt-auto">
+					<img class="mb-3" src="/static/img/list-icon.svg" alt="List">
+					<h2>Watchlist</h2>
+					<p>List and prioritize movies you would like to watch.</p>
+				</div>
+				<div class="col mt-auto">
+					<img src="/static/img/discover-icon.svg" alt="Magnifying glass">
+					<h2>Discover</h2>
+					<p>Browse trending titles from top movie sites such as IMDB and Rotten Tomatoes.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+{% endblock %}
