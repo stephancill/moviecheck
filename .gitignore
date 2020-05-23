@@ -135,3 +135,5 @@ data/db
 node_modules
 
 *.pem
+
+config.py
