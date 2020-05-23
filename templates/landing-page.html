@@ -11,7 +11,7 @@
 
 {% block content %}
 <div class="container">
-	<section class=" mx-auto mx-xl-0 mx-lg-0 mx-md-0">
+	<section id="main-section" class="mx-auto mx-xl-0 mx-lg-0 mx-md-0">
 		<div class="cta-body">
 			<h1>Your personal entertainment portfolio.</h1>
 			<h3>Movie Check keeps track of movies you've <strong>seen</strong> and <strong>want to see</strong>.</h3>
@@ -19,6 +19,7 @@
 			<a href="/auth/login">Already have an account?</a>
 		</div>
 		<div class="cover-container">
+			<!-- TODO: Optimize images -->
 			<img src="https://m.media-amazon.com/images/M/MV5BNGVjNWI4ZGUtNzE0MS00YTJmLWE0ZDctN2ZiYTk2YmI3NTYyXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
 			<img src="https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
 			<img src="https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SY1000_CR0,0,674,1000_AL_.jpg" alt="">
@@ -30,19 +31,19 @@
 	<div id="features" class="container">
 		<div class="features-body">
 			<h1>Features</h1>
-			<div class="row">
-				<div class="col mt-auto">
+			<div class="row align-bottom">
+				<div class="col-md mb-lg-auto mb-md-3 text-center">
 					<img src="/static/img/checkmark-icon.svg" alt="Checkmark">
 					<h2>Seen</h2>
 					<p>Keep track of which movies you’ve seen and what you thought of them.</p>
 				</div>
-				<div class="col mt-auto">
-					<img class="mb-3" src="/static/img/list-icon.svg" alt="List">
+				<div class="col-md mb-lg-auto mb-md-3 text-center">
+					<img class="mb-3 mt-3" src="/static/img/list-icon.svg" alt="List">
 					<h2>Watchlist</h2>
 					<p>List and prioritize movies you would like to watch.</p>
 				</div>
-				<div class="col mt-auto">
-					<img src="/static/img/discover-icon.svg" alt="Magnifying glass">
+				<div class="col-md mb-lg-auto mb-md-3 text-center">
+					<img class="mb-3 mt-2" src="/static/img/discover-icon.svg" alt="Magnifying glass">
 					<h2>Discover</h2>
 					<p>Browse trending titles from top movie sites such as IMDB and Rotten Tomatoes.</p>
 				</div>
