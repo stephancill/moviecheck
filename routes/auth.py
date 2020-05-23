@@ -96,7 +96,7 @@ async def forgot_password(request):
 
 	response = html(response_html)
 
-	subject = "Turn Left Media Analytics - Reset your password"
+	subject = "MovieCheck - Reset your password"
 	email_html = """\
 		<html>
 			<head></head>
@@ -210,12 +210,12 @@ def send_verification_email(request, token):
 		location=request.app.url_for("auth.verify_email", token=verification_token)
 	)
 
-	subject = "Turn Left Media Analytics - Verify your email"
+	subject = "MovieCheck - Verify your email"
 	email_html = """\
 		<html>
 			<head></head>
 			<body>
-				<p>Thank you for registering on Turn Left Media Analytics by Neon Solutions.</p>
+				<p>Thank you for signing up for MovieCheck!</p>
 				<a href="{}">Verify email</a>
 			</body>
 		</html>
