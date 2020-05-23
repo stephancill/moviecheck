@@ -11,7 +11,7 @@
 
 <div class="container">
     <section>
-        <form action="{{url_for('auth.register')}}">
+        <form action="{{url_for('auth.register')}}" method="POST">
             <h1><strong>Let's get started.</strong></h1>
             <div class="row">
                 <div class="form-field col-xl">
@@ -36,7 +36,7 @@
                 <input type="password" name="confirm_password" required>
             </div>
             <div class="row align-center form-footer">
-                <div class="col-xl pb-3"><button class="cta-button">Sign up for free</button></div>
+                <div class="col-xl pb-3"><button type="submit" class="cta-button">Sign up for free</button></div>
                 <div class="col-xl mt-auto mb-auto ml-auto pb-3"><a href="{{url_for('login_page')}}">Already have an account?</a></div>
             </div>
             
