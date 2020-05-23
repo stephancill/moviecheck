@@ -158,44 +158,6 @@ async def reset_password(request, token):
 	return html("<p>Password successfully reset</p><a href='/login'>Login</a>")
 
 
-@auth.route("/register", methods=["GET"])
-async def register_page(request):
-	failure = request.args.get("failure")
-	message = None
-	if failure:
-		if failure == "name_missing":
-			message = "First or last name missing."
-		elif failure == "credential_missing":
-			message = "Email or password missing."
-		elif failure == "password_matching":
-			message = "Passwords do not match."
-		elif failure == "invalid_email":
-			message = "The email address you entered is invalid."
-		else:
-			message = "Something went wrong"
-
-	template = request.app.env.get_template("authentication.html")
-	return html(template.render(
-		register=True,
-		message=message
-	))
-
-@auth.route("/login", methods=["GET"])
-async def login_page(request):
-	failure = request.args.get("failure")
-	message = None
-	if failure:
-		if failure == "password":
-			message = "Incorrect email/password combination."
-		else:
-			message = "Something went wrong." 
-
-	template = request.app.env.get_template("authentication.html")
-	return html(template.render(
-		register=False,
-		message=message
-	))
-
 @auth.route("/register", methods=["POST"])
 async def register(request):
 	try:

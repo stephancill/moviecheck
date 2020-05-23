@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/authentication.css">
+{% endblock %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section>
+        <form action="{{url_for('auth.register')}}">
+            <h1><strong>Let's get started.</strong></h1>
+            <div class="row">
+                <div class="form-field col-xl">
+                    <h5>First name</h5>
+                    <input type="name" name="first_name" required>
+                </div>
+                <div class="form-field col-xl">
+                    <h5>Last name</h5>
+                    <input type="name" name="last_name" required>
+                </div>
+            </div>
+            <div class="form-field">
+                <h5>Email address</h5>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-field">
+                <h5>Choose a new password</h5>
+                <input type="password" name="password" required>
+            </div>
+            <div class="form-field">
+                <h5>Confirm password</h5>
+                <input type="password" name="confirm_password" required>
+            </div>
+            <div class="row align-center form-footer">
+                <div class="col-xl pb-3"><button class="cta-button">Sign up for free</button></div>
+                <div class="col-xl mt-auto mb-auto ml-auto pb-3"><a href="{{url_for('login_page')}}">Already have an account?</a></div>
+            </div>
+            
+            <!-- TODO: ToS and PP links -->
+            <p>By signing up, you confirm that you've read and accepted our Terms of Service and Privacy Policy.</p>
+        </form>
+    </section>
+</div>
+
+
+{% endblock %}

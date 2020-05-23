@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="/static/css/landing-page.css">
 {% endblock %}
 
-{% block title %}MovieCheck{% endblock %}
+{% block title %}Home{% endblock %}
 
 
 
@@ -15,8 +15,8 @@
 		<div class="cta-body">
 			<h1>Your personal entertainment portfolio.</h1>
 			<h3>Movie Check keeps track of movies you've <strong>seen</strong> and <strong>want to see</strong>.</h3>
-			<a href="/auth/register" class="cta-button-wrapper"><div class="cta-button"><p>Sign up for free</p></div></a>
-			<a href="/auth/login">Already have an account?</a>
+			<a href="{{url_for('register_page')}}" class="cta-button-wrapper mb-3"><button class="cta-button">Sign up for free</button></a>
+			<a href="{{url_for('login_page')}}">Already have an account?</a>
 		</div>
 		<div class="cover-container">
 			<!-- TODO: Optimize images -->

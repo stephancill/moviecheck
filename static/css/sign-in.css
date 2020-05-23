@@ -1,0 +1,6 @@
+@media (min-width:800px) {
+    form {
+        margin-top: 20vh;
+        max-width: 340px;
+    }
+}

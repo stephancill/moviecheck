@@ -7,15 +7,19 @@ body {
 	font-family: 'Inter', sans-serif;
 }
 
+a {
+    outline: none;
+    color: var(--brand-main);
+}
+
+a:hover {
+	color: var(--brand-secondary);
+	text-decoration: underline;
+}
+
 h1 {
     font-weight: 800;
     font-size: 36px;
-}
-
-h4 {
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 29px;
 }
 
 h3 {
@@ -26,7 +30,31 @@ h3 {
 
 h3 strong {
     text-decoration-line: underline;
-    color: var(--brand-main);
+}
+
+h4 {
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+h5 {
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 17px;
+	color: #888888;
+	text-transform: uppercase;
+}
+
+p {
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 15px;
+}
+
+strong {
+	color: var(--brand-main);
 }
 
 .navbar {
@@ -59,4 +87,27 @@ h3 strong {
 	background-image: url("/static/img/hamburger.svg");
 	width: 20px;
 	height: 20px;
+}
+
+.cta-button {
+	padding-left: 30px;
+	padding-right: 30px;
+	text-align: center;
+    height: 54px;
+    background: var(--brand-main);
+    box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;    
+	text-decoration: none;
+	border: none;
+	font-style: normal;
+    font-weight: bold;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #ffffff;
+}
+
+
+.cta-button:hover {
+    background-color: var(--brand-secondary);
 }

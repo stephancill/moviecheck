@@ -1,9 +1,5 @@
 
 
-a {
-    outline: none;
-}
-
 #main-section {
     min-height: 320px;
     margin-bottom: 25vh;
@@ -25,34 +21,8 @@ a {
     line-height: 24px;
     display: flex;
     align-items: center;
-    color: var(--brand-main);
 }
 
-.cta-button {
-    width: 200px;
-    height: 54px;
-    background: var(--brand-main);
-    box-shadow: -2px 4px 8px rgba(0, 0, 0, 0.25);
-    border-radius: 7px;    
-    margin-bottom: 18px;
-}
-
-.cta-button p {
-    width: 100%;
-    margin-top: 15px;
-    font-family: Inter;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 24px;
-    text-align: center;
-    color: #ffffff;
-    
-}
-
-.cta-button:hover {
-    background-color: var(--brand-secondary);
-}
 
 .cta-button-wrapper {
     text-decoration: none !important;
@@ -83,7 +53,7 @@ a {
     max-width: 20vw;
 }
 
-@media (min-width:801px) {
+@media (min-width:800px) {
     
     .cta-body {
         max-width: 510px;

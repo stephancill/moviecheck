@@ -1,0 +1,40 @@
+.cta-button {
+    width: 100%;
+    box-shadow: -1px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+form {
+    margin-top: 50px;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-field {
+    margin-top: 28px;
+    width: 100%;
+}
+
+.form-field input {
+    background: #EBEBEB;
+    border-radius: 6px;
+    height: 40px;
+    border: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+}
+
+form .form-footer {
+    margin-top: 47px;
+}
+
+@media (min-width:800px) {
+    form {
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 10vh;
+        max-width: 470px;
+    }
+    
+}
