@@ -247,7 +247,7 @@ async def verify_email(request, token):
 
 	User.objects(id=user_id).update_one(is_verified=True)
 
-	return html("<p>Email verified</p><a href='/login'>Login</a>")
+	return html("<p>Email verified</p><a href='/signin'>Login</a>")
 	
 
 @auth.route("/login", methods=["POST"])
