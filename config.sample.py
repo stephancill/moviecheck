@@ -18,7 +18,7 @@ except Exception:
 try:
 	MONGO_URI = os.environ["MONGO_URI"]
 except Exception:
-	MONGO_URI = None
+	DB_NAME = "moviecheck"
 
 try:
 	DB_NAME = os.environ["DB_NAME"]
