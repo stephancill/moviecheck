@@ -129,24 +129,31 @@ li a img {
 .movie {
 	height: 332px;
 	width: 190px;
+	text-align: center;
 }
 
 .movie .gradient-overlay {
 	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 51.56%, #000000 100%);
+	border-radius: 7px;
 }
 
+/* TODO: Move this to logged in css */
 .movie img {
 	border-radius: 7px;
 	width: 100%;
 	height: auto;
+	display: block;
+	position: relative;
 	z-index: -1;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	margin-bottom: 17px;
 }
 
 .movie span {
-	width: 100%;
-	padding-left: 5px;
-	padding-right: 5px;
-	text-align: center;
+	max-width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	
 	font-weight: 300;
 	font-size: 18px;
 	line-height: 22px;
@@ -155,4 +162,5 @@ li a img {
 
 .movie span strong {
 	color: inherit;
+	font-weight: 600;
 }

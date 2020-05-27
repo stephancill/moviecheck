@@ -19,11 +19,12 @@
         </form>
     </section>
     <section class="results-container">
-        <ul>
+        <div class="row">
             {% for movie in results %}
                 {% include "components/movie.html" %}
             {% endfor %}
-        </ul>
+        </div>
+        
         
     </section>
 </div>
