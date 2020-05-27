@@ -1,0 +1,12 @@
+<li class="movie">
+    {% if movie.rt_rating or movie.imdb_rating %}
+    <!-- TODO: Gradient overlay -->
+    <div class="gradient-overlay">
+        <img src="{{movie.poster_url}}" alt="">
+    </div>
+    {% else %}
+    <img src="{{movie.poster_url}}" alt="">
+    {% endif %}
+    <span><strong>{{movie.title}}</strong></span>
+    <span>({{movie.year}})</span>
+</li>

@@ -27,22 +27,14 @@ app.env = env
 @is_user_logged_in
 async def landing_page(request, is_logged_in):
 	if is_logged_in:
-		return redirect(app.url_for("watchlist_page"))
+		return redirect(app.url_for("watchlist.root"))
 	else:
 		template = env.get_template("landing-page.html")
 		return html(template.render())
 
-@app.route("/watchlist")
-@login_required
-async def watchlist_page(request, user):
-	logger.debug(user)
-	template = env.get_template("watchlist.html")
-	return html(template.render(user=user))
-
 @app.route("/account")
 @login_required
 async def account_page(request, user):
-	logger.debug(user)
 	template = env.get_template("account.html")
 	return html(template.render(user=user))
 

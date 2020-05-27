@@ -122,7 +122,37 @@ li a img {
     color: #ffffff;
 }
 
-
 .cta-button:hover {
     background-color: var(--brand-secondary);
+}
+
+.movie {
+	height: 332px;
+	width: 190px;
+}
+
+.movie .gradient-overlay {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 51.56%, #000000 100%);
+}
+
+.movie img {
+	border-radius: 7px;
+	width: 100%;
+	height: auto;
+	z-index: -1;
+}
+
+.movie span {
+	width: 100%;
+	padding-left: 5px;
+	padding-right: 5px;
+	text-align: center;
+	font-weight: 300;
+	font-size: 18px;
+	line-height: 22px;
+	color: #000000;
+}
+
+.movie span strong {
+	color: inherit;
 }

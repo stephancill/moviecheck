@@ -34,19 +34,19 @@
 						</li>
 						{% else %}
 						<li>
-							<a class="nav-link text-dark" href="{{url_for('watchlist_page')}}">
+							<a class="nav-link text-dark" href="{{url_for('watchlist.root')}}">
 								<img src="/static/img/nav/tv-icon.svg" alt="television">
 								Watchlist
 							</a>
 						</li>
 						<li>
-							<a class="nav-link text-dark" href="/explore">
+							<a class="nav-link text-dark" href="{{url_for('explore.root')}}">
 								<img src="/static/img/nav/discover-icon.svg" alt="magnifying glass">
 								Explore
 							</a>
 						</li>
 						<li>
-							<a class="nav-link text-dark" href="/account">
+							<a class="nav-link text-dark" href="{{url_for('account_page')}}">
 								<img src="/static/img/nav/user-icon.svg" alt="magnifying glass">
 								{{user.first_name}}
 							</a>

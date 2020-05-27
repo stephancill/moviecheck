@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/explore.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
+<script src="/static/js/explore.js"></script> -->
+{% endblock %}
+
+{% block title %}Explore{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section class="search-container">
+        <form action="{{url_for('explore.search')}}" method="GET">
+            <input id="search-input" type="text" placeholder="Search..." name="query">
+        </form>
+    </section>
+    <section class="results-container">
+        <ul>
+            {% for movie in results %}
+                {% include "components/movie.html" %}
+            {% endfor %}
+        </ul>
+        
+    </section>
+</div>
+
+{% endblock %}
