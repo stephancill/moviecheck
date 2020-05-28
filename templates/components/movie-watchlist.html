@@ -1,0 +1,10 @@
+{% extends "components/movie-base.html" %}
+
+{% block buttons %}
+<form action="{{url_for('watchlist.remove', movie_id=movie.imdb_id)}}" method="POST">
+    <button class="left" type="submit"><img src="/static/img/watchlist/remove-button.svg" alt=""></button>
+</form>
+<form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}" method="POST">
+    <button class="right" type="submit"><img src="/static/img/watchlist/check-button-lg.svg" alt=""></button>
+</form>
+{% endblock %}

@@ -65,6 +65,10 @@ strong {
 	color: var(--brand-main);
 }
 
+section h2 {
+    margin-bottom: 50px;
+}
+
 /* TODO: Hover should change colour of icons too */
 li a img {
 	width: 18px;

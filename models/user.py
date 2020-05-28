@@ -1,6 +1,7 @@
 import bcrypt
 from loguru import logger
-from mongoengine import Document, StringField, BooleanField, DateTimeField, ListField
+from mongoengine import Document, StringField, BooleanField, DateTimeField, ListField, EmbeddedDocumentField
+from .movie_item import MovieItem
 import requests
 
 class User(Document):
@@ -11,6 +12,7 @@ class User(Document):
 	is_verified = BooleanField(default=False)
 	date_registered = DateTimeField(required=True)
 	active_token = StringField()
+	watch_history = ListField(EmbeddedDocumentField(MovieItem))
 
 	@staticmethod
 	def exists(email):

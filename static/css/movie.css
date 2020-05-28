@@ -52,13 +52,13 @@
 	display: block;
 }
 
-.movie form .add-btn {
+.movie form .right {
     top: 10px;
     right: 10px;
     transform: translate(50%, -50%);
 }
 
-.movie form .check-btn {
+.movie form .left {
     top: 10px;
     left: 10px;
     transform: translate(-50%, -50%);

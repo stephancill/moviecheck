@@ -29,6 +29,17 @@ class Movie:
         movie.poster_url = tmdb_base + json["poster_path"]
         return movie
 
+    @staticmethod
+    def from_imdb_id(imdb_id):
+        session = CachedSession(expires_after=60*60*24)
+        r = session.get("http://www.omdbapi.com/", params={
+            "apiKey": config.OMDB_API_KEY,
+            "i": imdb_id
+        })
+        json = r.json()
+        movie = Movie.from_omdb(json)
+        return movie
+
     def populate_ratings(self):
         session = CachedSession(expires_after=60*60*24)
         if self.imdb_id:

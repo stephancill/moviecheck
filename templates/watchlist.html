@@ -3,6 +3,7 @@
 {% block head %}
 {{super()}}
 <link rel="stylesheet" href="/static/css/watchlist.css">
+<link rel="stylesheet" href="/static/css/movie.css">
 {% endblock %}
 
 {% block title %}Watchlist{% endblock %}
@@ -11,13 +12,29 @@
 
 <div class="container">
     <section class="watchlist-container">
-        <div class="watchlist-title row">
-            <img src="/static/img/watchlist/tv-icon.svg" alt="television">
-            <h1>{{user.first_name}}'s Watchlist</h1>
+        <h2>{{user.first_name}}'s Watchlist</h2>
+        <div class="row">
+            {% for movie in watchlist %}
+                {% include "components/movie-watchlist.html" %}
+            {% endfor %}
         </div>
-        <div class="watchlist-body"></div>
     </section>
-
+    <section>
+        <h2>History</h2>
+        
+        <table>
+            <tr>
+                <th>DATE</th>
+                <th>TITLE</th>
+            </tr>
+            {% for movie in history %}
+            <tr>
+                <td>{{movie.date.strftime('%Y-%m-%d')}}</td>
+                <td>{{movie.title}} ({{movie.year}})</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
 </div>
 
 {% endblock %}
