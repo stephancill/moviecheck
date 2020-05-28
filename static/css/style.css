@@ -26,7 +26,8 @@ h1 {
 
 h2 {
     font-weight: 800;
-    font-size: 36px;
+	font-size: 36px;
+	color: #000000;
 }
 
 h3 {
@@ -124,43 +125,4 @@ li a img {
 
 .cta-button:hover {
     background-color: var(--brand-secondary);
-}
-
-.movie {
-	height: 332px;
-	width: 190px;
-	text-align: center;
-}
-
-.movie .gradient-overlay {
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 51.56%, #000000 100%);
-	border-radius: 7px;
-}
-
-/* TODO: Move this to logged in css */
-.movie img {
-	border-radius: 7px;
-	width: 100%;
-	height: auto;
-	display: block;
-	position: relative;
-	z-index: -1;
-	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-	margin-bottom: 17px;
-}
-
-.movie span {
-	max-width: 90%;
-	margin-left: auto;
-	margin-right: auto;
-	
-	font-weight: 300;
-	font-size: 18px;
-	line-height: 22px;
-	color: #000000;
-}
-
-.movie span strong {
-	color: inherit;
-	font-weight: 600;
 }

@@ -44,3 +44,13 @@ try:
 	EMAIL_SMTP_SERVER = os.environ["EMAIL_SMTP_SERVER"]
 except Exception:
 	EMAIL_SMTP_SERVER = "SERVICE MAIL SMTP SERVER"
+
+try:
+	OMDB_API_KEY = os.environ["OMDB_API_KEY"]
+except Exception:
+	OMDB_API_KEY = "OMDB_API_KEY"
+
+try:
+	TMDB_API_KEY = os.environ["TMDB_API_KEY"]
+except Exception:
+	TMDB_API_KEY = "TMDB_API_KEY"

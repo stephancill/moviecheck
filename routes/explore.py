@@ -11,34 +11,43 @@ from sanic import response
 
 explore = Blueprint("explore", url_prefix="/explore")
 
+def get_trending():
+	r = requests.get("https://api.themoviedb.org/3/discover/movie", {
+		"api_key": config.TMDB_API_KEY,
+		"sort_by": "popularity.desc"
+	})
+	movies_json = []
+	for movie_json in r.json().get("results", [])[:5]:
+		movie = Movie.from_tmdb(movie_json)
+		movie.populate_ratings()
+		movies_json.append(movie.__dict__)
+	
+	return movies_json
+
+
 @explore.route("/")
 @login_required
 async def root(request, user):
 	template = request.app.env.get_template("explore.html")
-	return response.html(template.render(user=user))
+	trending_json = get_trending()
+	return response.html(template.render(user=user, trending=trending_json))
 
 @explore.route("/search")
 @login_required
 async def search(request, user):
-    # TODO: Ratings
-    query = request.args.get("query", default="")
-    r = requests.get("http://www.omdbapi.com/", {
-        "apiKey": config.OMDB_API_KEY,
-        "s": query,
-        "type": "movie"
-    })
-    json = r.json()
-    omdb_keymap = {
-        "Title": "title",
-        "Year": "year",
-        "imdbID": "imdb_id",
-        "Poster": "poster_url",
-        "Type": "type"
-    }
-    movies_json = []
-    for movie_json in r.json().get("Search", []):
-        movie = Movie(**{omdb_keymap[key]: value for key, value in movie_json.items()})
-        movies_json.append(movie.__dict__)
+	# TODO: Ratings
+	query = request.args.get("query", default="")
+	r = requests.get("http://www.omdbapi.com/", {
+		"apiKey": config.OMDB_API_KEY,
+		"s": query.strip(),
+		"type": "movie"
+	})
+	json = r.json()
+	results_json = []
+	for movie_json in r.json().get("Search", []):
+		movie = Movie.from_omdb(movie_json)
+		movie.populate_ratings()
+		results_json.append(movie.__dict__)
 
-    template = request.app.env.get_template("explore.html")
-    return response.html(template.render(user=user, results=movies_json))
+	template = request.app.env.get_template("explore.html")
+	return response.html(template.render(user=user, results=results_json))

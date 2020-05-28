@@ -1,0 +1,90 @@
+.movie {
+	position: relative;
+	text-align: center;
+	margin-right: 47px;
+	margin-bottom: 30px;
+	width: 190px;
+}
+
+.movie .gradient-overlay {
+    position: relative;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 51.56%, #000000 100%);
+	border-radius: 7px;
+}
+
+.movie .poster {
+	border-radius: 7px;
+	height: 280px;
+	width: 100%;
+	display: block;
+	position: relative;
+	z-index: -1;
+	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+	margin-bottom: 17px;
+}
+
+.movie span {
+	max-width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	
+	font-weight: 300;
+	font-size: 18px;
+	line-height: 22px;
+	color: #000000;
+}
+
+.movie span strong {
+	color: inherit;
+	font-weight: 600;
+}
+
+.movie form button {
+	position: absolute;
+	padding: 0;
+	z-index: 2;
+	background: none;
+	border: none;
+	display: none;
+}
+
+.movie:hover button {
+	display: block;
+}
+
+.movie form .add-btn {
+    top: 10px;
+    right: 10px;
+    transform: translate(50%, -50%);
+}
+
+.movie form .check-btn {
+    top: 10px;
+    left: 10px;
+    transform: translate(-50%, -50%);
+}
+
+.movie .rating {
+    position: absolute;
+    bottom: 10px;
+    z-index: 2;
+}
+
+.movie .rating img {
+    margin-bottom: 3px;
+}
+
+.movie .rating span {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+    color: #DBDBDB;
+}
+
+.movie .rt-rating {
+    left: 16px;
+}
+
+.movie .imdb-rating {
+    right: 16px;
+}

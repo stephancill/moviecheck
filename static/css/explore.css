@@ -1,0 +1,39 @@
+.search-container {
+    padding-top: 128px;
+    padding-bottom: 128px;
+}
+
+.search-container form input {
+    border: none;
+    font-weight: 600;
+    font-size: 48px;
+    border-bottom: 3px solid #BABABA;
+    border-radius: 1px;
+    
+}
+
+::placeholder {
+    color: #BABABA;
+    opacity: 1;
+}
+
+section h2 {
+    margin-bottom: 50px;
+}
+
+.search-container form button {
+	background: none;
+	border: none;
+}
+
+.trending-container {
+    position: relative;
+}
+
+@media (min-width:800px) {
+    .trending-container .row {
+        position: absolute;
+        left: -100px;
+        right: -100px;
+    }
+}

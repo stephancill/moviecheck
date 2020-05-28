@@ -13,6 +13,7 @@ requests = "*"
 itsdangerous = "*"
 loguru = "*"
 bcrypt = "*"
+requests-cache = "*"
 
 [requires]
 python_version = "3.6"

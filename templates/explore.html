@@ -2,10 +2,10 @@
 
 {% block head %}
 {{super()}}
+<link rel="stylesheet" href="/static/css/movie.css">
 <link rel="stylesheet" href="/static/css/explore.css">
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/css/autoComplete.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
-<script src="/static/js/explore.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>-->
 {% endblock %}
 
 {% block title %}Explore{% endblock %}
@@ -13,20 +13,37 @@
 {% block content %}
 
 <div class="container">
-    <section class="search-container">
+    <section class="search-container text-center">
         <form action="{{url_for('explore.search')}}" method="GET">
             <input id="search-input" type="text" placeholder="Search..." name="query">
+            <button type="reset"><img src="/static/img/explore/cross.svg" alt=""></button>
         </form>
     </section>
+    {% if results is defined %}
     <section class="results-container">
-        <div class="row">
+        <h2>Results</h2>
+        <div class="row mx-auto">
             {% for movie in results %}
                 {% include "components/movie.html" %}
             {% endfor %}
         </div>
-        
+    </section>
+    {% else %}
+    <section class="trending-container">
+        <h2>Trending</h2>
+        <div class="row justify-content-center">
+            {% for movie in trending|batch(5)|first %}
+                {% include "components/movie.html" %}
+            {% endfor %}
+        </div>
         
     </section>
+    {% endif %}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="/static/js/explore.js"></script> 
 {% endblock %}
