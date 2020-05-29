@@ -1,0 +1,37 @@
+version: '3'
+services:
+
+  moviecheck:
+    build: .
+    env_file:
+      - .env 
+    container_name: moviecheck
+    image: moviecheck
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - mongodb
+    networks:
+      - frontend
+      - backend
+
+  mongodb:
+    image: webhippie/mongodb
+    container_name: mongodb
+    restart: unless-stopped
+    command: mongod
+    environment: 
+      MONGODB_DBPATH: /data/db
+    volumes:
+      - data/db:/data/db
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge

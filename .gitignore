@@ -135,6 +135,4 @@ node_modules
 
 *.pem
 
-config.py
-
 cache.sqlite
