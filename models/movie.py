@@ -1,12 +1,14 @@
 import config
+from loguru import logger
 from requests_cache import CachedSession
 
 class Movie:
-    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, rt_rating=None, imdb_rating=None):
+    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, genres=[], rt_rating=None, imdb_rating=None):
         self.title = title
         self.year = year
         self.imdb_id = imdb_id
         self.poster_url = poster_url
+        self.genres = genres
         self.rt_rating = rt_rating
         self.imdb_rating = imdb_rating
     
@@ -38,9 +40,11 @@ class Movie:
         })
         json = r.json()
         movie = Movie.from_omdb(json)
+        movie.populate_details()
         return movie
 
-    def populate_ratings(self):
+    # TODO: Async implementation
+    def populate_details(self):
         session = CachedSession(expires_after=60*60*24)
         if self.imdb_id:
             r = session.get("http://www.omdbapi.com/", params={
@@ -55,10 +59,15 @@ class Movie:
                 "y": self.year
             })
             json = r.json()
-            print(self.title, self.year, json)
             self.imdb_id = json.get("imdbID")
+            if not self.imdb_id:
+                logger.debug("Could not find movie with title '{}' ({})".format(self.title, self.year))
+                return
 
         self.imdb_rating = json.get("imdbRating")
         rt_rating = ([x for x in json.get("Ratings", []) if x["Source"] == "Rotten Tomatoes"] or [{}])[0].get("Value")
         if rt_rating:
             self.rt_rating = rt_rating.split("/")[0]
+
+        self.genres = json.get("Genre", "").split(", ")
+        

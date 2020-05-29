@@ -28,6 +28,7 @@ h2 {
     font-weight: 800;
 	font-size: 36px;
 	color: #000000;
+	margin-bottom: 55px;
 }
 
 h3 {
@@ -65,11 +66,10 @@ strong {
 	color: var(--brand-main);
 }
 
-section h2 {
-    margin-bottom: 50px;
+section {
+	padding-top: 40px;
 }
 
-/* TODO: Hover should change colour of icons too */
 li a img {
 	width: 18px;
 	height: 18px;
@@ -109,6 +109,10 @@ li a img {
 	height: 20px;
 }
 
+.active {
+	color: #000000 !important;
+}
+
 .cta-button {
 	padding-left: 30px;
 	padding-right: 30px;
@@ -129,4 +133,10 @@ li a img {
 
 .cta-button:hover {
     background-color: var(--brand-secondary);
+}
+
+@media (min-width:800px) {
+    section {
+		padding-top: 15vh;
+    }
 }

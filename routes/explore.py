@@ -6,6 +6,7 @@ from loguru import logger
 from models.movie import Movie
 from models.user import User
 import requests
+from requests_cache import CachedSession
 from sanic import Blueprint
 from sanic import response
 
@@ -19,7 +20,7 @@ def get_trending():
 	movies_json = []
 	for movie_json in r.json().get("results", [])[:5]:
 		movie = Movie.from_tmdb(movie_json)
-		movie.populate_ratings()
+		movie.populate_details()
 		movies_json.append(movie.__dict__)
 	
 	return movies_json
@@ -35,19 +36,19 @@ async def root(request, user):
 @explore.route("/search")
 @login_required
 async def search(request, user):
-	# TODO: Ratings
-	query = request.args.get("query", default="")
-	r = requests.get("http://www.omdbapi.com/", {
+	query = request.args.get("query", default="").strip()
+	session = CachedSession(expires_after=60*60*24)
+	r = session.get("http://www.omdbapi.com/", params={
 		"apiKey": config.OMDB_API_KEY,
-		"s": query.strip(),
+		"s": query,
 		"type": "movie"
 	})
 	json = r.json()
 	results_json = []
 	for movie_json in r.json().get("Search", []):
 		movie = Movie.from_omdb(movie_json)
-		movie.populate_ratings()
+		movie.populate_details()
 		results_json.append(movie.__dict__)
 
 	template = request.app.env.get_template("explore.html")
-	return response.html(template.render(user=user, results=results_json))
+	return response.html(template.render(user=user, results=results_json, query=query))

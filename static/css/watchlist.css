@@ -1,3 +1,47 @@
-.watchlist-container {
-    margin-top: 15vh;
+.rating {
+    display: none;
+}
+.movie .gradient-overlay {
+    background: none !important;
+}
+
+.watchlist-container .row {
+    margin-left: 0px;
+}
+
+table {
+    width: 90%;
+    min-width: 350px;
+    overflow: scroll;
+}
+
+th {
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 21px;
+    color: #ADADAD;
+    padding-left: 35px;
+}
+
+td {
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 21px;
+    color: #383838;
+    padding-left: 35px;
+}
+
+tr {
+    border-bottom: 2px solid #E2E2E2;
+    height: 68px;
+    width: 80%;
+}
+
+
+table td.shrink {
+    white-space:nowrap;
+    min-width: 150px;
+}
+table td.expand {
+    width: 99%;
 }

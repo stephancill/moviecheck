@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page = "watchlist" %}
 
 {% block head %}
 {{super()}}
@@ -12,25 +13,29 @@
 
 <div class="container">
     <section class="watchlist-container">
-        <h2>{{user.first_name}}'s Watchlist</h2>
+        <h2><i class="icon-tv"></i> {{user.first_name|title}}'s Watchlist</h2>
         <div class="row">
             {% for movie in watchlist %}
                 {% include "components/movie-watchlist.html" %}
             {% endfor %}
+            {% if watchlist|length == 0 %}
+            <h3>Go to the <a href="{{url_for('explore.root')}}">Explore</a> tab and find some movies to add here.</h3>
+            {% endif %}
         </div>
     </section>
     <section>
-        <h2>History</h2>
-        
+        <h2><i class="icon-history" style="font-size: 27px;"></i> History</h2>
         <table>
             <tr>
                 <th>DATE</th>
                 <th>TITLE</th>
+                <th>GENRES</th>
             </tr>
             {% for movie in history %}
             <tr>
-                <td>{{movie.date.strftime('%Y-%m-%d')}}</td>
-                <td>{{movie.title}} ({{movie.year}})</td>
+                <td class="shrink" style="padding-right: 40px;">{{movie.date.strftime('%Y-%m-%d')}}</td>
+                <td class="expand">{{movie.title}} ({{movie.year}})</td>
+                <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
             </tr>
             {% endfor %}
         </table>

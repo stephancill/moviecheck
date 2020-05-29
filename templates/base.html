@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"> 
 	<link rel="stylesheet" href="/static/css/style.css">
+	<link rel="stylesheet" href="/static/css/icomoon.css">
 	<title>{% block title %}{% endblock %} - MovieCheck</title>
 	{% endblock %}
 </head>
@@ -25,34 +26,26 @@
 				<div class="collapse navbar-collapse" id="navbarText">
 					<ul class="navbar-nav ml-auto">
 						{% if user is not defined %}
-						<!-- TODO: Set .active class on active link -->
-						<!-- https://jinja.palletsprojects.com/en/2.11.x/tricks/#highlighting-active-menu-items -->
-						<li>
-							<a class="nav-link text-dark" href="/#features">Features</a>
-						</li>
-						<li>
-							<a class="nav-link text-dark" href="{{url_for('login_page')}}">Sign in</a>
-						</li>
+							{% set navigation_bar = [
+								("/#features", "features", "Features", ""),
+								(url_for('login_page'), "sign-in", "Sign in", "")
+							] -%}
 						{% else %}
-						<li>
-							<a class="nav-link text-dark" href="{{url_for('watchlist.root')}}">
-								<img src="/static/img/nav/tv-icon.svg" alt="television">
-								Watchlist
-							</a>
-						</li>
-						<li>
-							<a class="nav-link text-dark" href="{{url_for('explore.root')}}">
-								<img src="/static/img/nav/discover-icon.svg" alt="magnifying glass">
-								Explore
-							</a>
-						</li>
-						<li>
-							<a class="nav-link text-dark" href="{{url_for('account_page')}}">
-								<img src="/static/img/nav/user-icon.svg" alt="magnifying glass">
-								{{user.first_name}}
-							</a>
-						</li>
+							{% set navigation_bar = [
+								(url_for('watchlist.root'), "watchlist", "Watchlist", "icon-tv"),
+								(url_for('explore.root'), "explore", "Explore", "icon-discover"),
+								(url_for('account_page'), "account", user.first_name|title, "icon-user")
+							] -%}
 						{% endif %}
+						{% set active_page = active_page|default('index') -%}
+						{% for href, id, caption, icon in navigation_bar %}
+						<li>
+							<a class="nav-link text-dark {% if id == active_page %}active{% endif %}" href="{{ href|e }}">
+								<i class="{{icon}}"></i>
+								{{ caption|e }}
+							</a>
+						</li>
+						{% endfor %}
 					</ul>
 				</div>
 			</nav>

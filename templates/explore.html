@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% set active_page = "explore" %}
 
 {% block head %}
 {{super()}}
@@ -13,14 +14,13 @@
 <div class="container">
     <section class="search-container text-center">
         <form action="{{url_for('explore.search')}}" method="GET">
-            <input id="search-input" type="text" placeholder="Search..." name="query">
-            <button type="reset"><img src="/static/img/explore/cross.svg" alt=""></button>
+            <input id="search-input" type="text" placeholder="Search..." name="query" {% if query %}value="{{query}}"{% endif %}>
         </form>
     </section>
     {% if results is defined %}
     <section class="results-container">
-        <h2>Results</h2>
-        <div class="row mx-auto">
+        <h2><i class="icon-discover"></i> Results</h2>
+        <div class="row">
             {% for movie in results %}
                 {% include "components/movie.html" %}
             {% endfor %}
@@ -28,7 +28,7 @@
     </section>
     {% else %}
     <section class="trending-container">
-        <h2>Trending</h2>
+        <h2><i class="icon-trending"></i> Trending</h2>
         <div class="row justify-content-center">
             {% for movie in trending|batch(5)|first %}
                 {% include "components/movie.html" %}
@@ -39,9 +39,4 @@
     {% endif %}
 </div>
 
-{% endblock %}
-
-{% block scripts %}
-{{super()}}
-<script src="/static/js/explore.js"></script> 
 {% endblock %}
