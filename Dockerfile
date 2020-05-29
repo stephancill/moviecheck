@@ -1,21 +1,16 @@
-FROM python:3.6-slim-stretch
+FROM python:3.6-stretch
 
-LABEL MAINTAINER="FirstName LastName <example@domain.com>"
+LABEL MAINTAINER="Stephan Cilliers <stephanus.cilliers@protonmail.com>"
 
-ENV GROUP_ID=1000 \
-    USER_ID=1000
+RUN mkdir /app
+COPY . /app
+WORKDIR /app
 
-WORKDIR /var/www/
+RUN apt-get install gcc
 
-RUN pip install pipenv
-RUN pipenv run pip freeze > requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install 'pipenv==2018.11.26'
+RUN pipenv install --system --ignore-pipfile
 RUN pip install gunicorn
-
-RUN addgroup -g $GROUP_ID www
-RUN adduser -D -u $USER_ID -G www www -s /bin/sh
-
-USER www
 
 EXPOSE 8080
 

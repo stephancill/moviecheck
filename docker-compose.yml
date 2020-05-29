@@ -9,14 +9,15 @@ services:
     image: moviecheck
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:8080"
     volumes:
-      - ./:/var/www
+      - .:/app
     depends_on:
       - mongodb
     networks:
       - frontend
       - backend
+      - nginx-proxy
 
   mongodb:
     image: webhippie/mongodb
@@ -26,7 +27,7 @@ services:
     environment: 
       MONGODB_DBPATH: /data/db
     volumes:
-      - data/db:/data/db
+      - ./data/db:/data/db
     networks:
       - backend
 
@@ -35,3 +36,5 @@ networks:
     driver: bridge
   backend:
     driver: bridge
+  nginx-proxy:
+    external: true
