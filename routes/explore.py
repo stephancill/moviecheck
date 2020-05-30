@@ -1,4 +1,6 @@
+import asyncio
 from .auth import login_required
+from concurrent.futures import ThreadPoolExecutor
 import config
 from datetime import datetime, timedelta
 from functools import wraps
@@ -44,11 +46,17 @@ async def search(request, user):
 		"type": "movie"
 	})
 	json = r.json()
-	results_json = []
+	movies = []
 	for movie_json in r.json().get("Search", []):
 		movie = Movie.from_omdb(movie_json)
-		movie.populate_details()
-		results_json.append(movie.__dict__)
+		movies.append(movie)
+	
+	with ThreadPoolExecutor(max_workers=20) as executor:
+		loop = asyncio.get_event_loop()
+		futures = [loop.run_in_executor(executor, movie.populate_details) for movie in movies]
+		await asyncio.gather(*futures, return_exceptions=True) 
+
+	results_json = [movie.__dict__ for movie in movies]
 
 	template = request.app.env.get_template("explore.html")
 	return response.html(template.render(user=user, results=results_json, query=query))
