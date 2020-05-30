@@ -20,12 +20,18 @@ services:
       - nginx-proxy
 
   mongodb:
-    image: webhippie/mongodb
+    image: mongodb
     container_name: mongodb
     restart: unless-stopped
-    command: mongod
+    command: mongod --auth
     environment: 
-      MONGODB_DBPATH: /data/db
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${DB_NAME}
+      MONGODB_DATA_DIR: /data/db
+      MONDODB_LOG_DIR: /dev/null
+    ports:
+      - 27020:27017
     volumes:
       - ./data/db:/data/db
     networks:
@@ -36,5 +42,3 @@ networks:
     driver: bridge
   backend:
     driver: bridge
-  nginx-proxy:
-    external: true

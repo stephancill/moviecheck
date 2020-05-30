@@ -1,17 +1,15 @@
 import os
-import loguru
 
-try:
-	SERVER_ENDPOINT = os.environ["SERVER_ENDPOINT"]
-	MONGO_HOST = os.environ["MONGO_HOST"]
-	MONGO_PORT = os.environ["MONGO_PORT"]
-	MONGO_URI = os.environ["MONGO_URI"]
-	DB_NAME = os.environ["DB_NAME"]
-	JWT_SECRET = os.environ["JWT_SECRET"]
-	EMAIL_ADDRESS = os.environ["EMAIL_ADDRESS"]
-	EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-	EMAIL_SMTP_SERVER = os.environ["EMAIL_SMTP_SERVER"]
-	OMDB_API_KEY = os.environ["OMDB_API_KEY"]
-	TMDB_API_KEY = os.environ["TMDB_API_KEY"]
-except Exception as e:
-	loguru.exception(e)
+SERVER_ENDPOINT = os.environ.get("SERVER_ENDPOINT", None)
+MONGO_HOST = os.environ.get("MONGO_HOST", None)
+MONGO_PORT = os.environ.get("MONGO_PORT", None)
+MONGO_URI = os.environ.get("MONGO_URI", None)
+MONGO_USERNAME = os.environ.get("MONGO_USERNAME", None)
+MONGO_PASSWORD = os.environ.get("MONGO_PASSWORD", None)
+DB_NAME = os.environ.get("DB_NAME", None)
+JWT_SECRET = os.environ.get("JWT_SECRET", None)
+EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", None)
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD", None)
+EMAIL_SMTP_SERVER = os.environ.get("EMAIL_SMTP_SERVER", None)
+OMDB_API_KEY = os.environ.get("OMDB_API_KEY", None)
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY", None)

@@ -136,3 +136,5 @@ node_modules
 *.pem
 
 cache.sqlite
+
+docker-compose.yml
