@@ -47,6 +47,7 @@ async def root(request, user, watchlist):
 async def add(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	item = MovieItem(imdb_id=movie_id, date=datetime.now())
+	# TODO: Investigate add_to_set not working
 	Watchlist.objects(id=watchlist.id).update(add_to_set__items=item)
 	return response.empty()
 
