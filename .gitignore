@@ -130,6 +130,7 @@ dmypy.json
 .vscode/settings.json
 
 data/db
+data/data_backup
 
 node_modules
 

@@ -17,7 +17,6 @@ services:
     networks:
       - frontend
       - backend
-      - nginx-proxy
 
   mongodb:
     image: mongodb
