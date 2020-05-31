@@ -34,9 +34,13 @@
                 {% include "components/movie.html" %}
             {% endfor %}
         </div>
-        
     </section>
     {% endif %}
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="/static/js/explore.js"></script>
 {% endblock %}

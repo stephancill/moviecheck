@@ -7,33 +7,44 @@ from functools import wraps
 from loguru import logger
 from models.movie import Movie
 from models.user import User
+from models.watchlist import Watchlist
 import requests
 from requests_cache import CachedSession
 from sanic import Blueprint
 from sanic import response
+from .watchlist import default_watchlist, is_in_default_watchlist
 
 explore = Blueprint("explore", url_prefix="/explore")
+
+async def populate_details(movies):
+	with ThreadPoolExecutor(max_workers=20) as executor:
+		loop = asyncio.get_event_loop()
+		futures = [loop.run_in_executor(executor, movie.populate_details) for movie in movies]
+		await asyncio.gather(*futures, return_exceptions=True) 
 
 def get_trending():
 	r = requests.get("https://api.themoviedb.org/3/discover/movie", {
 		"api_key": config.TMDB_API_KEY,
 		"sort_by": "popularity.desc"
 	})
-	movies_json = []
+	movies = []
 	for movie_json in r.json().get("results", [])[:5]:
 		movie = Movie.from_tmdb(movie_json)
-		movie.populate_details()
-		movies_json.append(movie.__dict__)
+		movies.append(movie)
 	
-	return movies_json
+	return movies
 
 
 @explore.route("/")
 @login_required
 async def root(request, user):
+	# TODO: Centralize this initialization (in_watchlist, populate_details)
 	template = request.app.env.get_template("explore.html")
-	trending_json = get_trending()
-	return response.html(template.render(user=user, trending=trending_json))
+	trending = get_trending()
+	await populate_details(trending)
+	for movie in trending:
+		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)
+	return response.html(template.render(user=user, trending=trending))
 
 @explore.route("/search")
 @login_required
@@ -49,14 +60,10 @@ async def search(request, user):
 	movies = []
 	for movie_json in r.json().get("Search", []):
 		movie = Movie.from_omdb(movie_json)
+		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)
 		movies.append(movie)
 	
-	with ThreadPoolExecutor(max_workers=20) as executor:
-		loop = asyncio.get_event_loop()
-		futures = [loop.run_in_executor(executor, movie.populate_details) for movie in movies]
-		await asyncio.gather(*futures, return_exceptions=True) 
-
-	results_json = [movie.__dict__ for movie in movies]
+	await populate_details(movies)
 
 	template = request.app.env.get_template("explore.html")
-	return response.html(template.render(user=user, results=results_json, query=query))
+	return response.html(template.render(user=user, results=movies, query=query))

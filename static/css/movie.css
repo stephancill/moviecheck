@@ -65,6 +65,23 @@
     transform: translate(-50%, -50%);
 }
 
+
+.not-watchlist .watchlist-buttons  {
+	display: none;
+}
+
+.not-watchlist .not-watchlist-buttons  {
+	display: block;
+}
+
+.watchlist .watchlist-buttons  {
+	display: block;
+}
+
+.watchlist .not-watchlist-buttons  {
+	display: none;
+}
+
 .movie .rating {
     position: absolute;
     bottom: 10px;

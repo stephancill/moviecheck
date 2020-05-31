@@ -3,7 +3,7 @@ from loguru import logger
 from requests_cache import CachedSession
 
 class Movie:
-    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, genres=[], rt_rating=None, imdb_rating=None):
+    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, genres=[], rt_rating=None, imdb_rating=None, in_watchlist=False):
         self.title = title
         self.year = year
         self.imdb_id = imdb_id
@@ -11,6 +11,7 @@ class Movie:
         self.genres = genres
         self.rt_rating = rt_rating
         self.imdb_rating = imdb_rating
+        self.in_watchlist = in_watchlist
     
     @staticmethod
     def from_omdb(json):
@@ -43,7 +44,6 @@ class Movie:
         movie.populate_details()
         return movie
 
-    # TODO: Async implementation
     def populate_details(self):
         session = CachedSession(expires_after=60*60*24)
         if self.imdb_id:

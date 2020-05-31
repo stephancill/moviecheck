@@ -16,7 +16,7 @@
         <h2><i class="icon-tv"></i> {{user.first_name|title}}'s Watchlist</h2>
         <div class="row">
             {% for movie in watchlist %}
-                {% include "components/movie-watchlist.html" %}
+                {% include "components/movie.html" %}
             {% endfor %}
             {% if watchlist|length == 0 %}
             <h3>Go to the <a href="{{url_for('explore.root')}}">Explore</a> tab and find some movies to add here.</h3>
@@ -42,4 +42,9 @@
     </section>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="/static/js/watchlist.js"></script>
 {% endblock %}

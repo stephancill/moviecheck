@@ -12,6 +12,13 @@ from sanic import response
 
 watchlist = Blueprint("watchlist", url_prefix="/watchlist")
 
+def is_in_default_watchlist(imdb_id, user):
+	return Watchlist.objects(
+		user_id=user.id, 
+		is_default=True,
+		items__imdb_id=imdb_id
+	).first() != None
+
 def default_watchlist(f):
 	@wraps(f)
 	def decorated_function(request, user, *args, **kwargs):
@@ -26,10 +33,10 @@ def default_watchlist(f):
 @login_required
 @default_watchlist
 async def root(request, user, watchlist):
-	logger.debug(user)
 	watchlist_movies = []
 	for item in watchlist.items:
 		movie = Movie.from_imdb_id(item.imdb_id)
+		movie.in_watchlist = True
 		watchlist_movies.append(movie)
 
 	history = []
@@ -47,8 +54,8 @@ async def root(request, user, watchlist):
 async def add(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	item = MovieItem(imdb_id=movie_id, date=datetime.now())
-	# TODO: Investigate add_to_set not working
-	Watchlist.objects(id=watchlist.id).update(add_to_set__items=item)
+	if not is_in_default_watchlist(movie_id, user):
+		Watchlist.objects(id=watchlist.id).update(push__items=item)
 	return response.empty()
 
 @watchlist.route("/seen/<movie_id>", methods=["POST"])
