@@ -10,9 +10,10 @@
 }
 
 table {
+    display: block;
     width: 90%;
     min-width: 350px;
-    overflow: scroll;
+    overflow-x: scroll;
 }
 
 th {
