@@ -1,40 +1,39 @@
 version: '3'
-services:
+  services:
+    moviecheck:
+      build: .
+      env_file:
+        - .env 
+      container_name: moviecheck
+      image: moviecheck
+      restart: unless-stopped
+      ports:
+        - "8080:8080"
+      volumes:
+        - .:/app
+      depends_on:
+        - mongodb
+      networks:
+        - frontend
+        - backend
 
-  moviecheck:
-    build: .
-    env_file:
-      - .env 
-    container_name: moviecheck
-    image: moviecheck
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    volumes:
-      - .:/app
-    depends_on:
-      - mongodb
-    networks:
-      - frontend
-      - backend
-
-  mongodb:
-    image: mongodb
-    container_name: mongodb
-    restart: unless-stopped
-    command: mongod --auth
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: ${DB_NAME}
-      MONGODB_DATA_DIR: /data/db
-      MONDODB_LOG_DIR: /dev/null
-    ports:
-      - 27020:27017
-    volumes:
-      - ./data/db:/data/db
-    networks:
-      - backend
+    mongodb:
+      image: mongodb
+      container_name: mongodb
+      restart: unless-stopped
+      command: mongod --auth
+      environment: 
+        MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+        MONGO_INITDB_DATABASE: ${DB_NAME}
+        MONGODB_DATA_DIR: /data/db
+        MONDODB_LOG_DIR: /dev/null
+      ports:
+        - 27020:27017
+      volumes:
+        - ./data/db:/data/db
+      networks:
+        - backend
 
 networks:
   frontend:
