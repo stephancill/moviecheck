@@ -25,6 +25,7 @@ def login_required(f):
 			if not serialized_token: raise Exception("No token, sign in")
 			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
 			user = User.objects(id=user_id).first()
+			if not user: raise Exception("Could not find user.")
 		except Exception as e:
 			logger.info(e)
 			return redirect(request.app.url_for('login_page'))
