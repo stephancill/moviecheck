@@ -12,4 +12,22 @@ $(document).ready(function() {
             }
         })
     })
+    
+    $(".watchlist-row .scroll-button").click(function() {
+        $(".watchlist-row")[0].scrollBy({
+            left: 236,
+            behavior: 'smooth'
+        })
+    })
+    console.log($(".watchlist-row .movie").length * 236)
+    $(window).trigger('resize');
 })
+
+$(window).resize(function() {
+    console.log($(".watchlist-row .movie").length * 236, $(".watchlist-container").width())
+    if ($(".watchlist-row .movie").length * 236 - $(".watchlist-row .filler").width() > $(".watchlist-container").width()) {
+        $(".watchlist-row .scroll-button").show()
+    } else {
+        $(".watchlist-row .scroll-button").hide()
+    }
+}) 

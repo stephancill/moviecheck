@@ -14,31 +14,41 @@
 <div class="container">
     <section class="watchlist-container">
         <h2><i class="icon-tv"></i> {{user.first_name|title}}'s Watchlist</h2>
-        <div class="row">
+        {% if watchlist|length == 0 %}
+        <h3>Go to the <a href="{{url_for('explore.root')}}">Explore</a> tab and find some movies to add here.</h3>
+        {% else %}
+        <div class="gradient-background row-full"></div>
+        <div class="watchlist-row row-full">
+            <div class="filler"></div>
             {% for movie in watchlist %}
                 {% include "components/movie.html" %}
             {% endfor %}
-            {% if watchlist|length == 0 %}
-            <h3>Go to the <a href="{{url_for('explore.root')}}">Explore</a> tab and find some movies to add here.</h3>
-            {% endif %}
+            <button class="scroll-button">
+                <img  src="/static/img/watchlist/next-button.svg" alt="">
+            </button>
+            <div class="filler-end"></div>
         </div>
+        {% endif %}
     </section>
     <section>
         <h2><i class="icon-history" style="font-size: 27px;"></i> History</h2>
-        <table>
-            <tr>
-                <th>DATE</th>
-                <th>TITLE</th>
-                <th>GENRES</th>
-            </tr>
-            {% for movie in history %}
-            <tr>
-                <td class="shrink" style="padding-right: 40px;">{{movie.date.strftime('%Y-%m-%d')}}</td>
-                <td class="expand">{{movie.title}} ({{movie.year}})</td>
-                <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
-            </tr>
-            {% endfor %}
-        </table>
+        <div class="history-container">
+            <table class="mx-auto">
+                <tr>
+                    <th>DATE</th>
+                    <th>TITLE</th>
+                    <th>GENRES</th>
+                </tr>
+                {% for movie in history %}
+                <tr>
+                    <td class="shrink" style="padding-right: 40px;">{{movie.date.strftime('%Y-%m-%d')}}</td>
+                    <td class="expand">{{movie.title}} ({{movie.year}})</td>
+                    <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
     </section>
 </div>
 

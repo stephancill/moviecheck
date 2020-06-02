@@ -28,6 +28,7 @@
     </section>
     {% else %}
     <section class="trending-container">
+        <div class="gradient-background-flipped row-full"></div>
         <h2><i class="icon-trending"></i> Trending</h2>
         <div class="row justify-content-center">
             {% for movie in trending|batch(5)|first %}

@@ -5,6 +5,7 @@
 	margin-right: 23px;
 	margin-bottom: 30px;
 	width: 190px;
+	min-width: 190px;
 }
 
 .movie .gradient-overlay {
