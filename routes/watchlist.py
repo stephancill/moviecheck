@@ -88,7 +88,7 @@ async def remove(request, user, watchlist, movie_id):
 @watchlist.route("/remove_history/<item_id>", methods=["POST"])
 @login_required
 async def remove_history(request, user, item_id):
-	logger.debug(movie_id)
+	logger.debug(item_id)
 	with db_session():
 		MovieItem.select(lambda m: m.id == item_id and m.user.id == user.id).delete()
 	return response.empty()
