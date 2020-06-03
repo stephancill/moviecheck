@@ -44,6 +44,7 @@ async def root(request, user, watchlist):
 	for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
 		movie = Movie.from_imdb_id(item.imdb_id)
 		movie.date = item.date
+		movie.id = item.id
 		history.append(movie)
 
 	template = request.app.env.get_template("watchlist.html")
@@ -84,11 +85,10 @@ async def remove(request, user, watchlist, movie_id):
 		MovieItem.select(lambda m: m.imdb_id == movie_id and m.watchlist.id == watchlist.id).delete()
 	return response.empty()
 
-@watchlist.route("/remove_history/<movie_id>", methods=["POST"])
+@watchlist.route("/remove_history/<item_id>", methods=["POST"])
 @login_required
-async def remove_history(request, user, movie_id):
-	logger.debug(movie_id)
+async def remove_history(request, user, item_id):
+	logger.debug(item_id)
 	with db_session():
-		# TODO: Delete the correct record, not all
-		MovieItem.select(lambda m: m.imdb_id == movie_id and m.user.id == user.id).delete()
+		MovieItem.select(lambda m: m.id == item_id and m.user.id == user.id).delete()
 	return response.empty()
