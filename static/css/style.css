@@ -82,6 +82,21 @@ li a img {
 	margin-right: 3px;
 }
 
+footer {
+	margin-top: 200px;
+	color: #424242;
+}
+
+footer a {
+	/* text-decoration: underline; */
+	color: #131313;
+}
+
+footer a:hover {
+	color: #131313;
+	text-decoration: underline;
+}
+
 .row-full {
 	width: 100vw;
     position: relative;

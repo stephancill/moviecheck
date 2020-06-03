@@ -16,7 +16,9 @@ watchlist = Blueprint("watchlist", url_prefix="/watchlist")
 @db_session
 def is_in_default_watchlist(imdb_id, user):
 	return Watchlist.select(
-		lambda w: imdb_id in w.movie_items.imdb_id and w.is_default).first() != None
+		lambda w: imdb_id in w.movie_items.imdb_id and 
+		w.is_default and 
+		w.user.id == user.id).first() != None
 	
 def default_watchlist(f):
 	@wraps(f)
