@@ -57,6 +57,11 @@ table {
     width: 90%;
     min-width: 350px;
     overflow-x: scroll;
+    scrollbar-width: none;
+}
+
+.watchlist-row::-webkit-scrollbar {
+    display: none;
 }
 
 th {
@@ -89,6 +94,20 @@ table td.expand {
     width: 99%;
 }
 
+table tr .edit-button {
+    background: none;
+    border: none;
+    color: #E2E2E2;
+    visibility: hidden;
+}
+
+table tr .edit-button:hover {
+    color: #383838;
+}
+
+table tr:hover button {
+	visibility: visible;
+}
 
 @media (max-width:1400px) {
     .watchlist-row .filler{

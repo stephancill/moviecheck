@@ -32,15 +32,24 @@
     </section>
     <section>
         <h2><i class="icon-history" style="font-size: 27px;"></i> History</h2>
+        {% if history|length == 0 %}
+        <h3>Movies that you've watched will show up here.</h3>
+        {% else %}
         <div class="history-container">
             <table class="mx-auto">
                 <tr>
+                    <th></th>
                     <th>DATE</th>
                     <th>TITLE</th>
                     <th>GENRES</th>
                 </tr>
                 {% for movie in history %}
                 <tr>
+                    <td>
+                        <form action="{{url_for('watchlist.remove_history', movie_id=movie.imdb_id)}}" method="POST">
+                            <button type="submit" class="edit-button"><i class="icon-bin"></i></button>
+                        </form>
+                    </td>
                     <td class="shrink" style="padding-right: 40px;">{{movie.date.strftime('%Y-%m-%d')}}</td>
                     <td class="expand">{{movie.title}} ({{movie.year}})</td>
                     <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
@@ -48,6 +57,7 @@
                 {% endfor %}
             </table>
         </div>
+        {% endif %}
         
     </section>
 </div>

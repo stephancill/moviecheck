@@ -83,3 +83,12 @@ async def remove(request, user, watchlist, movie_id):
 		watchlist = Watchlist.get(id=watchlist.id)
 		MovieItem.get(watchlist=watchlist, imdb_id=movie_id).delete()
 	return response.empty()
+
+@watchlist.route("/remove_history/<movie_id>", methods=["POST"])
+@login_required
+async def remove_history(request, user, movie_id):
+	logger.debug(movie_id)
+	with db_session():
+		user = User.get(id=user.id)
+		MovieItem.get(user=user, imdb_id=movie_id).delete()
+	return response.empty()
