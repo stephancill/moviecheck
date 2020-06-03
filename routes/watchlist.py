@@ -70,7 +70,7 @@ async def seen(request, user, watchlist, movie_id):
 		# TODO: Catche error if does not exist
 		watchlist = Watchlist.get(id=watchlist.id)
 		user = User.get(id=user.id)
-		MovieItem.get(imdb_id=movie_id, watchlist=watchlist).delete()
+		MovieItem.select(lambda m: m.imdb_id == movie_id and m.watchlist.id == watchlist.id).delete()
 		movie = MovieItem(imdb_id=movie_id, date=datetime.now(), user=user)
 	return response.empty()
 
@@ -81,7 +81,7 @@ async def remove(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	with db_session():
 		watchlist = Watchlist.get(id=watchlist.id)
-		MovieItem.get(watchlist=watchlist, imdb_id=movie_id).delete()
+		MovieItem.select(lambda m: m.imdb_id == movie_id and m.watchlist.id == watchlist.id).delete()
 	return response.empty()
 
 @watchlist.route("/remove_history/<movie_id>", methods=["POST"])
@@ -89,6 +89,6 @@ async def remove(request, user, watchlist, movie_id):
 async def remove_history(request, user, movie_id):
 	logger.debug(movie_id)
 	with db_session():
-		user = User.get(id=user.id)
-		MovieItem.get(user=user, imdb_id=movie_id).delete()
+		# TODO: Delete the correct record, not all
+		MovieItem.select(lambda m: m.imdb_id == movie_id and m.user.id == user.id).delete()
 	return response.empty()
