@@ -24,7 +24,7 @@ env.globals["url_for"] = app.url_for
 app.env = env
 
 # https://stackoverflow.com/a/51671065/11363384
-db.bind(provider='postgres', user='', password='', host='localhost', database='postgres')
+db.bind(provider='postgres', user=config.POSTGRES_USERNAME, password=config.POSTGRES_PASSWORD, host=config.POSTGRES_HOST, database=config.DB_NAME)
 db.generate_mapping(create_tables=True)
 
 @app.route("/")

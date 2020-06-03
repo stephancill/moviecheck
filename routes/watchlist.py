@@ -21,21 +21,19 @@ def is_in_default_watchlist(imdb_id, user):
 def default_watchlist(f):
 	@wraps(f)
 	def decorated_function(request, user, *args, **kwargs):
-		watchlist = Watchlist.select(lambda w: w.user.id == user.id).first()
-		if not watchlist:
-			user = User.get(id=user.id)
-			watchlist = Watchlist(user=user, is_default=True)
+		with db_session(strict=False):
+			watchlist = Watchlist.select(lambda w: w.user.id == user.id).first()
+			if not watchlist:
+				user = User.get(id=user.id)
+				watchlist = Watchlist(user=user, is_default=True)
+			watchlist.movie_items.load()
 		return f(request, user, watchlist, *args, **kwargs)
 	return decorated_function
 
 @watchlist.route("/")
-@db_session
 @login_required
 @default_watchlist
 async def root(request, user, watchlist):
-	# with db_session():
-	# watchlist = Watchlist.get(id=watchlist.id)
-	user = User.get(id=user.id)
 	watchlist_movies = []
 	for item in watchlist.movie_items:
 		movie = Movie.from_imdb_id(item.imdb_id)
@@ -58,7 +56,9 @@ async def root(request, user, watchlist):
 async def add(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	if not is_in_default_watchlist(movie_id, user):
-		item = MovieItem(imdb_id=movie_id, date=datetime.now(), watchlist=watchlist)
+		with db_session():
+			watchlist = Watchlist.get(id=watchlist.id)
+			item = MovieItem(imdb_id=movie_id, date=datetime.now(), watchlist=watchlist)
 	return response.empty()
 
 @watchlist.route("/seen/<movie_id>", methods=["POST"])
@@ -68,8 +68,10 @@ async def seen(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	with db_session():
 		# TODO: Catche error if does not exist
+		watchlist = Watchlist.get(id=watchlist.id)
+		user = User.get(id=user.id)
 		MovieItem.get(imdb_id=movie_id, watchlist=watchlist).delete()
-		MovieItem(imdb_id=movie_id, date=datetime.now(), user=user)
+		movie = MovieItem(imdb_id=movie_id, date=datetime.now(), user=user)
 	return response.empty()
 
 @watchlist.route("/remove/<movie_id>", methods=["POST"])
@@ -78,5 +80,6 @@ async def seen(request, user, watchlist, movie_id):
 async def remove(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
 	with db_session():
+		watchlist = Watchlist.get(id=watchlist.id)
 		MovieItem.get(watchlist=watchlist, imdb_id=movie_id).delete()
 	return response.empty()
