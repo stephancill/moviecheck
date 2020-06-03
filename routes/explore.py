@@ -26,7 +26,7 @@ def get_trending():
 		"sort_by": "popularity.desc"
 	})
 	movies = []
-	for movie_json in r.json().get("results", [])[:5]:
+	for movie_json in r.json().get("results", [])[:7]:
 		movie = Movie.from_tmdb(movie_json)
 		movies.append(movie)
 	
@@ -42,7 +42,7 @@ async def root(request, user):
 	await populate_details(trending)
 	for movie in trending:
 		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)
-	return response.html(template.render(user=user, trending=trending))
+	return response.html(template.render(user=user, trending=[x for x in trending if x.imdb_id]))
 
 @explore.route("/search")
 @login_required
