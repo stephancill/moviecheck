@@ -21,7 +21,8 @@ async def populate_details(movies):
 		await asyncio.gather(*futures, return_exceptions=True) 
 
 def get_trending():
-	r = requests.get("https://api.themoviedb.org/3/discover/movie", {
+	session = CachedSession(expires_after=60*60*24)
+	r = session.get("https://api.themoviedb.org/3/discover/movie", params={
 		"api_key": config.TMDB_API_KEY,
 		"sort_by": "popularity.desc"
 	})
