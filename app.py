@@ -1,7 +1,7 @@
 import config
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from loguru import logger
-from models.user import User
+from models import db
 from routes import api
 from routes.auth import login_required, is_user_logged_in
 import sanic
@@ -22,6 +22,10 @@ env = Environment(
 env.globals["url_for"] = app.url_for
 
 app.env = env
+
+# https://stackoverflow.com/a/51671065/11363384
+db.bind(provider='postgres', user='', password='', host='localhost', database='postgres')
+db.generate_mapping(create_tables=True)
 
 @app.route("/")
 @is_user_logged_in

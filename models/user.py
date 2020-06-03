@@ -1,27 +1,26 @@
 import bcrypt
+from datetime import datetime
 from loguru import logger
-from mongoengine import Document, StringField, BooleanField, DateTimeField, ListField, EmbeddedDocumentField
-from .movie_item import MovieItem
-import requests
+from pony.orm import *
 
-class User(Document):
-	email = StringField(required=True)
-	password_hash = StringField(required=True)
-	first_name = StringField(required=True)
-	last_name = StringField(required=True)
-	is_verified = BooleanField(default=False)
-	date_registered = DateTimeField(required=True)
-	active_token = StringField()
-	watch_history = ListField(EmbeddedDocumentField(MovieItem))
+db = Database()
 
-	@staticmethod
-	def exists(email):
-		return User.objects(email=email).first() != None
+class User(db.Entity):
+	id = PrimaryKey(int, auto=True)
+	email = Optional(str)
+	password_hash = Optional(str)
+	first_name = Optional(str)
+	last_name = Optional(str)
+	is_verified = Optional(bool)
+	date_registered = Optional(datetime)
+	active_token = Optional(str)
+	watch_history = Set('MovieItem')
+	watchlists = Set('Watchlist')
 
 	@staticmethod
 	def hash_password(password: str):
 		password = password.encode("utf-8")
-		return bcrypt.hashpw(password, bcrypt.gensalt())
+		return bcrypt.hashpw(password, bcrypt.gensalt()).decode()
 
 	def check_password(self, password):
 		password = password.encode("utf-8")

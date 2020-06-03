@@ -6,8 +6,6 @@ from datetime import datetime, timedelta
 from functools import wraps
 from loguru import logger
 from models.movie import Movie
-from models.user import User
-from models.watchlist import Watchlist
 import requests
 from requests_cache import CachedSession
 from sanic import Blueprint

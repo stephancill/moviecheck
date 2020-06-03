@@ -7,6 +7,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer, URLSafeTimedSerializer
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from loguru import logger
 from models.user import User
+from pony.orm import db_session, commit
 from sanic import Blueprint
 from sanic.response import redirect, text, html, empty
 import smtplib
@@ -24,7 +25,7 @@ def login_required(f):
 			serialized_token = request.cookies.get("token")
 			if not serialized_token: raise Exception("No token, sign in")
 			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
-			user = User.objects(id=user_id).first()
+			user = User.get(id=user_id)
 			if not user: raise Exception("Could not find user.")
 		except Exception as e:
 			logger.info(e)
@@ -39,7 +40,8 @@ def is_user_logged_in(f):
 			serialized_token = request.cookies.get("token")
 			if not serialized_token: raise Exception("No token, sign in")
 			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
-			user = User.objects(id=user_id).first()
+			with db_session():
+				user = User.get(id=user_id)
 		except Exception as e:
 			logger.info(e)
 			return f(request, False, *args, **kwargs)
@@ -92,7 +94,8 @@ async def forgot_password(request):
 	
 	response_html = "<p>We've sent you a password reset link. Check your inbox.</p>"
 	
-	user = User.objects(email=email).first()
+	with db_session():
+		user = User.get(email=email)
 	if not user:
 		logger.info("Could not find user. Returning response")
 		return html(response_html)
@@ -101,7 +104,8 @@ async def forgot_password(request):
 	relative_url = request.app.url_for("auth.reset_password", token=reset_token)
 	full_url = "{host}{location}".format(host=config.SERVER_ENDPOINT, location=relative_url)
 
-	User.objects(id=user.id).update_one(active_token=reset_token)
+	with db_session():
+		User[user.id].active_token = reset_token
 
 	if request.app.debug:
 		response_html = response_html + "<a href='{url}'>Reset your password</a>".format(url=full_url)
@@ -132,7 +136,8 @@ async def reset_password_page(request, token):
 	global url_safe_serializer
 	try:
 		user_id = url_safe_serializer.loads(token, max_age=60*60*24)
-		user = User.objects(id=user_id, active_token=token).first()
+		with db_session():
+			user = User.get(id=user_id, active_token=token)
 		if not user: raise Exception()
 	except SignatureExpired as e:
 		return html("<p>Token expired</p><a href='/'>Back</a>")
@@ -147,7 +152,8 @@ async def reset_password(request, token):
 	global url_safe_serializer
 	try:
 		user_id = url_safe_serializer.loads(token, max_age=60*60*24)
-		user = User.objects(id=user_id, active_token=token).first()
+		with db_session():
+			user = User.get(id=user_id, active_token=token)
 		if not user: raise Exception()
 	except SignatureExpired as e:
 		return html("<p>Token expired</p><a href='/'>Back</a>")
@@ -164,7 +170,8 @@ async def reset_password(request, token):
 		return redirect(request.app.url_for("reset_password_page")+"?failure={}".format(e))
 
 	password_hash = User.hash_password(password).decode()
-	User.objects(id=user_id).update_one(password_hash=password_hash, active_token=None)
+	with db_session():
+		User[user_id].set(password_hash=password_hash, active_token=None)
 	return html("<p>Password successfully reset</p><a href='/login'>Login</a>")
 
 
@@ -182,22 +189,25 @@ async def register(request):
 	except Exception as e:
 		logger.info(e)
 		return redirect(request.app.url_for("register_page")+"?failure={}".format(e))
+	
+	with db_session():
+		if User.exists(email=email):
+			logger.info("User with email {} exists.".format(email))
+			return redirect(request.app.url_for("register_page")+"?failure=exists")
+	
+		password_hash = User.hash_password(password)
+		user = User(
+			email=email, 
+			password_hash=password_hash, 
+			first_name=first_name, 
+			last_name=last_name,
+			date_registered=datetime.now()
+		)
 
-	if User.exists(email):
-		logger.info("User with email {} exists.".format(email))
-		return redirect(request.app.url_for("register_page")+"?failure=exists")
-	
-	password_hash = User.hash_password(password)
-	user = User(
-		email=email, 
-		password_hash=password_hash, 
-		first_name=first_name, 
-		last_name=last_name,
-		date_registered=datetime.now()
-	)
-	user.save()
-	
-	temp_token = url_safe_serializer.dumps(str(user.id))
+	with db_session():
+		user = User.get(email=email)
+		print(user.id, user.email)
+		temp_token = url_safe_serializer.dumps(str(user.id))
 	return redirect(request.app.url_for("auth.send_verification_email", token=temp_token))
 
 @auth.route("/send_verification/<token>")
@@ -210,8 +220,8 @@ def send_verification_email(request, token):
 		pass
 	
 	verification_token = url_safe_serializer.dumps(user_id)
-
-	user = User.objects(id=user_id).first()
+	with db_session():
+		user = User.get(id=user_id)
 	if not user:
 		return html("<p>Something went wrong...</p><a href='/'>")
 
@@ -250,12 +260,14 @@ async def verify_email(request, token):
 		user_id = url_safe_serializer.loads(token, max_age=60*60*24)
 	except SignatureExpired as e:
 		user_id = url_safe_serializer.loads(token)
-		User.objects(id=user_id).delete()
+		with db_session():
+			User.get(id=user_id).delete()
 		return html("<p>Token expired</p><a href='/register'>Register</a>")
 	except Exception as e:
 		return html("<p>Invalid token</p><a href='/register'>Register</a>")
-
-	User.objects(id=user_id).update_one(is_verified=True)
+	
+	with db_session():
+		User[user_id].set(is_verified=True)
 
 	return html("<p>Email verified</p><a href='/signin'>Login</a>")
 	
@@ -268,7 +280,8 @@ async def login(request):
 		logger.info("Missing fields")
 		return redirect(request.app.url_for("login_page")+"?failure=invalid")
 
-	user = User.objects(email=email).first()
+	with db_session():
+		user = User.get(email=email)
 
 	if not (user and user.check_password(password)):
 		logger.info("User not found/incorrect password ({})".format(email))

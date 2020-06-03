@@ -7,34 +7,37 @@ from models.user import User
 from models.watchlist import Watchlist
 from models.movie_item import MovieItem
 from models.movie import Movie
+from pony.orm import db_session, select
 from sanic import Blueprint
 from sanic import response
 
 watchlist = Blueprint("watchlist", url_prefix="/watchlist")
 
+@db_session
 def is_in_default_watchlist(imdb_id, user):
-	return Watchlist.objects(
-		user_id=user.id, 
-		is_default=True,
-		items__imdb_id=imdb_id
-	).first() != None
-
+	return Watchlist.select(
+		lambda w: imdb_id in w.movie_items.imdb_id and w.is_default).first() != None
+	
 def default_watchlist(f):
 	@wraps(f)
 	def decorated_function(request, user, *args, **kwargs):
-		watchlist = Watchlist.objects(user_id=user.id, is_default=True).first()
+		watchlist = Watchlist.select(lambda w: w.user.id == user.id).first()
 		if not watchlist:
-			watchlist = Watchlist(user_id=user.id, is_default=True)
-			watchlist.save() 
+			user = User.get(id=user.id)
+			watchlist = Watchlist(user=user, is_default=True)
 		return f(request, user, watchlist, *args, **kwargs)
 	return decorated_function
 
 @watchlist.route("/")
+@db_session
 @login_required
 @default_watchlist
 async def root(request, user, watchlist):
+	# with db_session():
+	# watchlist = Watchlist.get(id=watchlist.id)
+	user = User.get(id=user.id)
 	watchlist_movies = []
-	for item in watchlist.items:
+	for item in watchlist.movie_items:
 		movie = Movie.from_imdb_id(item.imdb_id)
 		movie.in_watchlist = True
 		watchlist_movies.append(movie)
@@ -46,16 +49,16 @@ async def root(request, user, watchlist):
 		history.append(movie)
 
 	template = request.app.env.get_template("watchlist.html")
-	return response.html(template.render(user=user, watchlist=watchlist_movies, history=history))
+	rendered = template.render(user=user, watchlist=watchlist_movies, history=history)
+	return response.html(rendered)
 
 @watchlist.route("/add/<movie_id>", methods=["POST"])
 @login_required
 @default_watchlist
 async def add(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
-	item = MovieItem(imdb_id=movie_id, date=datetime.now())
 	if not is_in_default_watchlist(movie_id, user):
-		Watchlist.objects(id=watchlist.id).update(push__items=item)
+		item = MovieItem(imdb_id=movie_id, date=datetime.now(), watchlist=watchlist)
 	return response.empty()
 
 @watchlist.route("/seen/<movie_id>", methods=["POST"])
@@ -63,9 +66,10 @@ async def add(request, user, watchlist, movie_id):
 @default_watchlist
 async def seen(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
-	Watchlist.objects(id=watchlist.id).update(pull__items__imdb_id=movie_id)
-	item = MovieItem(imdb_id=movie_id, date=datetime.now())
-	User.objects(id=user.id).update(push__watch_history=item)
+	with db_session():
+		# TODO: Catche error if does not exist
+		MovieItem.get(imdb_id=movie_id, watchlist=watchlist).delete()
+		MovieItem(imdb_id=movie_id, date=datetime.now(), user=user)
 	return response.empty()
 
 @watchlist.route("/remove/<movie_id>", methods=["POST"])
@@ -73,5 +77,6 @@ async def seen(request, user, watchlist, movie_id):
 @default_watchlist
 async def remove(request, user, watchlist, movie_id):
 	logger.debug(movie_id)
-	Watchlist.objects(id=watchlist.id).update(pull__items__imdb_id=movie_id)
+	with db_session():
+		MovieItem.get(watchlist=watchlist, imdb_id=movie_id).delete()
 	return response.empty()
