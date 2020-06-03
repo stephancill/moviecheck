@@ -46,7 +46,7 @@
                 {% for movie in history %}
                 <tr>
                     <td>
-                        <form action="{{url_for('watchlist.remove_history', movie_id=movie.imdb_id)}}" method="POST">
+                        <form action="{{url_for('watchlist.remove_history', item_id=str(movie.id))}}" method="POST">
                             <button type="submit" class="edit-button"><i class="icon-bin"></i></button>
                         </form>
                     </td>
