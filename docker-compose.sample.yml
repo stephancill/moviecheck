@@ -12,28 +12,26 @@ version: '3'
       volumes:
         - .:/app
       depends_on:
-        - mongodb
+        - db
       networks:
         - frontend
         - backend
 
-    mongodb:
-      image: mongodb
-      container_name: mongodb
-      restart: unless-stopped
-      command: mongod --auth
-      environment: 
-        MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
-        MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-        MONGO_INITDB_DATABASE: ${DB_NAME}
-        MONGODB_DATA_DIR: /data/db
-        MONDODB_LOG_DIR: /dev/null
-      ports:
-        - 27020:27017
+    db:
+      image: postgres
+      restart: always
+      container_name: moviecheck-db
+      environment:
+        - "POSTGRES_USER=${POSTGRES_USERNAME}"
+        - "POSTGRES_PASSWORD=${POSTGRES_PASSWORD}"
+        - "POSTGRES_DB=${DB_NAME}"
       volumes:
-        - ./data/db:/data/db
+        - moviecheck_db:/var/lib/postgresql/data
       networks:
         - backend
+
+volumes:
+  moviecheck_db:
 
 networks:
   frontend:

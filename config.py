@@ -1,11 +1,6 @@
 import os
 
 SERVER_ENDPOINT = os.environ.get("SERVER_ENDPOINT", None)
-MONGO_HOST = os.environ.get("MONGO_HOST", None)
-MONGO_PORT = os.environ.get("MONGO_PORT", None)
-MONGO_URI = os.environ.get("MONGO_URI", None)
-MONGO_USERNAME = os.environ.get("MONGO_USERNAME", None)
-MONGO_PASSWORD = os.environ.get("MONGO_PASSWORD", None)
 POSTGRES_USERNAME = os.environ.get("POSTGRES_USERNAME", None)
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", None)
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST", None)
