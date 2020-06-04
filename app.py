@@ -4,6 +4,7 @@ from loguru import logger
 from models import db
 from routes import api
 from routes.auth import login_required, is_user_logged_in
+from routes.explore import get_trending
 import sanic
 from sanic.response import html, text, json, redirect
 import smtplib
@@ -33,8 +34,9 @@ async def landing_page(request, is_logged_in):
 	if is_logged_in:
 		return redirect(app.url_for("watchlist.root"))
 	else:
+		trending = get_trending()
 		template = env.get_template("landing-page.html")
-		return html(template.render())
+		return html(template.render(trending=trending))
 
 @app.route("/account")
 @login_required
