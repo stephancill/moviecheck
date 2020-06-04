@@ -38,21 +38,31 @@
         <div class="history-container">
             <table class="mx-auto">
                 <tr>
-                    <th></th>
                     <th>DATE</th>
                     <th>TITLE</th>
                     <th>GENRES</th>
+                    <th></th>
                 </tr>
                 {% for movie in history %}
                 <tr>
+                    <td class="shrink date-container" style="padding-right: 40px;">
+                        {% set date = movie.date.strftime('%Y-%m-%d') %}
+                        <div class="date">
+                            {{date}}
+                            <button type="submit"><i class="icon-pencil"></i></button>
+                        </div>
+                        <form action="{{url_for('watchlist.edit_history', item_id=movie.id)}}" method="POST" style="display: none;">
+                            <input type="date" value="{{date}}" name="date">
+                            <button type="submit"><i class="icon-check"></i></button>
+                        </form>
+                    </td>
+                    <td class="expand">{{movie.title}} ({{movie.year}})</td>
+                    <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
                     <td>
                         <form action="{{url_for('watchlist.remove_history', item_id=movie.id)}}" method="POST">
                             <button type="submit" class="edit-button"><i class="icon-bin"></i></button>
                         </form>
                     </td>
-                    <td class="shrink" style="padding-right: 40px;">{{movie.date.strftime('%Y-%m-%d')}}</td>
-                    <td class="expand">{{movie.title}} ({{movie.year}})</td>
-                    <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
                 </tr>
                 {% endfor %}
             </table>

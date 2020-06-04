@@ -90,5 +90,17 @@ async def remove(request, user, watchlist, movie_id):
 async def remove_history(request, user, item_id):
 	logger.debug(item_id)
 	with db_session():
-		MovieItem.select(lambda m: m.id == item_id and m.user.id == user.id).delete()
+		MovieItem.select(lambda m: m.id == item_id).delete()
+	return response.empty()
+
+@watchlist.route("/edit_history/<item_id>", methods=["POST"])
+@login_required
+async def edit_history(request, user, item_id):
+	logger.debug(item_id)
+	logger.debug(request.form.get("date"))
+	date_string = request.form.get("date")
+	if date_string:
+		with db_session():
+			movie = MovieItem.select(lambda m: m.id == item_id).first()
+			movie.date = datetime.strptime(date_string, "%Y-%m-%d")
 	return response.empty()

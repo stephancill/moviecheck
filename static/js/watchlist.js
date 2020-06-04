@@ -26,6 +26,13 @@ $(document).ready(function() {
             }
         })
     })
+
+    $(".history-container .date button").click(function (e) {
+        let button = $(this)
+        button.parent().hide()
+        button.parent().siblings("form").show()
+    })
+
     
     $(".watchlist-row .scroll-button").click(function() {
         $(".watchlist-row")[0].scrollBy({

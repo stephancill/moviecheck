@@ -88,20 +88,20 @@ tr {
 
 table td.shrink {
     white-space:nowrap;
-    min-width: 150px;
+    min-width: 130px;
 }
 table td.expand {
     width: 99%;
 }
 
-table tr .edit-button {
+table tr button {
     background: none;
     border: none;
     color: #E2E2E2;
     visibility: hidden;
 }
 
-table tr .edit-button:hover {
+table tr button:hover {
     color: #383838;
 }
 
