@@ -35,7 +35,7 @@ def default_watchlist(f):
 @default_watchlist
 async def root(request, user, watchlist):
 	watchlist_movies = []
-	for item in watchlist.movie_items:
+	for item in sorted(watchlist.movie_items, key=lambda x: x.date, reverse=True):
 		movie = Movie.from_imdb_id(item.imdb_id)
 		movie.in_watchlist = True
 		watchlist_movies.append(movie)
