@@ -83,7 +83,6 @@ li a img {
 }
 
 footer {
-	margin-top: 200px;
 	color: #424242;
 }
 
@@ -95,6 +94,10 @@ footer a {
 footer a:hover {
 	color: #131313;
 	text-decoration: underline;
+}
+
+.content {
+	min-height: 100vh;
 }
 
 .row-full {

@@ -14,69 +14,66 @@
 	{% endblock %}
 </head>
 	<body>
-		{% block navigation %}
-		<!-- Navigation -->
-		<div class="container">
-			<nav class="navbar navbar-expand-lg nav-fill w-100 px-0">
-				<a class="navbar-brand" href="/">
-					<img src="/static/img/logo-full.svg" alt="MovieCheck">
-				</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon brand-main"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarText">
-					<ul class="navbar-nav ml-auto">
-						{% if user is not defined %}
-							{% set navigation_bar = [
-								("/#features", "features", "Features", ""),
-								(url_for('login_page'), "sign-in", "Sign in", "")
-							] -%}
-						{% else %}
-							{% set navigation_bar = [
-								(url_for('watchlist.root'), "watchlist", "Watchlist", "icon-tv"),
-								(url_for('explore.root'), "explore", "Explore", "icon-discover"),
-								(url_for('account_page'), "account", user.first_name|title, "icon-user")
-							] -%}
-						{% endif %}
-						{% set active_page = active_page|default('index') -%}
-						{% for href, id, caption, icon in navigation_bar %}
-						<li>
-							<a class="nav-link text-dark {% if id == active_page %}active{% endif %}" href="{{ href|e }}">
-								<i class="{{icon}}"></i>
-								{{ caption|e }}
-							</a>
-						</li>
-						{% endfor %}
-					</ul>
-				</div>
-			</nav>
-		</div>
-		{% endblock %}
+		<div class="content">
+			{% block navigation %}
+			<!-- Navigation -->
+			<div class="container">
+				<nav class="navbar navbar-expand-lg nav-fill w-100 px-0">
+					<a class="navbar-brand" href="/">
+						<img src="/static/img/logo-full.svg" alt="MovieCheck">
+					</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon brand-main"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarText">
+						<ul class="navbar-nav ml-auto">
+							{% if user is not defined %}
+								{% set navigation_bar = [
+									("/#features", "features", "Features", ""),
+									(url_for('login_page'), "sign-in", "Sign in", "")
+								] -%}
+							{% else %}
+								{% set navigation_bar = [
+									(url_for('watchlist.root'), "watchlist", "Watchlist", "icon-tv"),
+									(url_for('explore.root'), "explore", "Explore", "icon-discover"),
+									(url_for('account_page'), "account", user.first_name|title, "icon-user")
+								] -%}
+							{% endif %}
+							{% set active_page = active_page|default('index') -%}
+							{% for href, id, caption, icon in navigation_bar %}
+							<li>
+								<a class="nav-link text-dark {% if id == active_page %}active{% endif %}" href="{{ href|e }}">
+									<i class="{{icon}}"></i>
+									{{ caption|e }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</nav>
+			</div>
+			{% endblock %}
 
-		{% block content %}
-		{% endblock %}
+		
+			{% block content %}
+			{% endblock %}
+		</div>
+		
 
 		{% include "components/analytics.html" %}
 		{% block scripts %}
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-		<script src="/static/vendor/bootstrap-notify/bootstrap-notify.min.js"></script>
 		<script src="/static/js/base.js"></script>
 		{% endblock %}
 	</body>
-	{% block scripts %}
-	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-	<script src="/static/js/base.js"></script>
-	{% endblock %}
-	
 	
 	<footer class="page-footer font-small blue pt-4">
 		<div class="footer-copyright text-center py-3">Made by 
 			<a href="https://twitter.com/stephancill" target="_blank">@stephancill</a>.
 			<br>
-			Data from OMDB and TMDB.
+			Data from <a href="https://www.omdbapi.com/" target="_blank" rel="noopener noreferrer">OMDB</a> and
+			<a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer">TMDB</a>.
 		</div>
 	</footer>
 
