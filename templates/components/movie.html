@@ -3,18 +3,15 @@
     <div class="movie-actions {{'watchlist' if movie.in_watchlist else 'not-watchlist'}}">
         <div class="not-watchlist-buttons">
             <form action="{{url_for('watchlist.add', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/explore/add-button.svg" alt=""></button>
-            </form>
-            <form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="right" type="submit"><img src="/static/img/explore/check-button.svg" alt=""></button>
+                <button class="left" type="submit"><img src="/static/img/explore/add-button.svg" alt="Add to watchlist"></button>
             </form>
         </div>
         <div class="watchlist-buttons">
             <form action="{{url_for('watchlist.remove', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="right" type="submit"><img src="/static/img/watchlist/remove-button.svg" alt=""></button>
+                <button class="right" type="submit"><img src="/static/img/watchlist/remove-button.svg" alt="Remove from watchlist"></button>
             </form>
             <form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/watchlist/check-button-lg.svg" alt=""></button>
+                <button class="left" type="submit"><img src="/static/img/watchlist/check-button-lg.svg" alt="Mark as seen"></button>
             </form>
         </div>
     </div>
