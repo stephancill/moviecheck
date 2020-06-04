@@ -28,9 +28,11 @@ $(document).ready(function() {
     })
 
     $(".history-container .date button").click(function (e) {
+        $(".date-container form").hide()
+        $(".date").show()
         let button = $(this)
-        button.parent().hide()
-        button.parent().siblings("form").show()
+        button.parents(".date").hide()
+        button.parents(".date").siblings("form").show()
     })
 
     
