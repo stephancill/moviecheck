@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from functools import wraps
+from .generic_responses import GenericResponse
 from itsdangerous import TimedJSONWebSignatureSerializer, URLSafeTimedSerializer, SignatureExpired
-from jinja2 import Environment, FileSystemLoader, select_autoescape
 from loguru import logger
 from models.user import User
 from pony.orm import db_session, commit
@@ -88,7 +88,7 @@ async def forgot_password(request):
 		logger.info("Bad request, no email field")
 		return empty(status=400)
 	
-	response_html = "<p>We've sent you a password reset link. Check your inbox.</p>"
+	response_html = GenericResponse.forgot_password_email_success(request.app)
 	
 	with db_session():
 		user = User.get(email=email)
@@ -104,7 +104,7 @@ async def forgot_password(request):
 		User[user.id].active_token = reset_token
 
 	if request.app.debug:
-		response_html = response_html + "<a href='{url}'>Reset your password</a>".format(url=full_url)
+		response_html = GenericResponse.forgot_password_email_success(request.app, debug_link=full_url)
 
 	response = html(response_html)
 
@@ -136,10 +136,10 @@ async def reset_password_page(request, token):
 			user = User.get(id=user_id, active_token=token)
 		if not user: raise Exception()
 	except SignatureExpired as e:
-		return html("<p>Token expired</p><a href='/'>Back</a>")
+		return html(GenericResponse.token_expired(request.app))
 	except Exception as e:
-		return html("<p>Invalid token</p><a href='/'>Back</a>")
-	
+		return html(GenericResponse.token_invalid(request.app))
+
 	template = request.app.env.get_template("change-password.html")
 	return html(template.render(token=token))
 
@@ -152,9 +152,9 @@ async def reset_password(request, token):
 			user = User.get(id=user_id, active_token=token)
 		if not user: raise Exception()
 	except SignatureExpired as e:
-		return html("<p>Token expired</p><a href='/'>Back</a>")
+		return html(GenericResponse.token_expired(request.app))
 	except Exception as e:
-		return html("<p>Invalid token</p><a href='/'>Back</a>")
+		return html(GenericResponse.token_invalid(request.app))
 
 	try:
 		password = request.form.get("password")
@@ -168,8 +168,9 @@ async def reset_password(request, token):
 	password_hash = User.hash_password(password)
 	with db_session():
 		User[user_id].set(password_hash=password_hash, active_token="")
-	return html("<p>Password successfully reset</p><a href='{}'>Login</a>".format(request.app.url_for("login_page")))
 
+	response_html = GenericResponse.password_reset_success(request.app)
+	return html(response_html)
 
 @auth.route("/register", methods=["POST"])
 async def register(request):
@@ -202,7 +203,6 @@ async def register(request):
 
 	with db_session():
 		user = User.get(email=email)
-		print(user.id, user.email)
 		temp_token = url_safe_serializer.dumps(str(user.id))
 	return redirect(request.app.url_for("auth.send_verification_email", token=temp_token))
 
@@ -212,8 +212,8 @@ def send_verification_email(request, token):
 	try:
 		user_id = url_safe_serializer.loads(token, max_age=10)
 	except Exception as e:
-		return html("<p>Invalid token</p><a href='/'>")
-		pass
+		response_html = GenericResponse.token_invalid(request.app)
+		return html(response_html)
 	
 	verification_token = url_safe_serializer.dumps(user_id)
 	with db_session():
@@ -243,29 +243,27 @@ def send_verification_email(request, token):
 		user.delete()
 		return redirect(request.app.url_for("register_page")+"?failure=invalid_email")
 
-	if request.app.debug:
-		return html("<p>We've sent you a verification email. Check your inbox.</p><a href='/auth/verify/{}'>Verify</a>".format(verification_token))
-	else:
-		return html("<p>We've sent you a verification email. Check your inbox.</p>")
+	return html(GenericResponse.verification_email_success(request.app, debug_link=verification_url))
 	
 
 @auth.route("/verify/<token>")
 async def verify_email(request, token):
 	global url_safe_serializer
+	token_issue = None
 	try:
 		user_id = url_safe_serializer.loads(token, max_age=60*60*24)
 	except SignatureExpired as e:
 		user_id = url_safe_serializer.loads(token)
 		with db_session():
 			User.get(id=user_id).delete()
-		return html("<p>Token expired</p><a href='/register'>Register</a>")
+		return html(GenericResponse.token_expired(request.app))
 	except Exception as e:
-		return html("<p>Invalid token</p><a href='/register'>Register</a>")
+		return html(GenericResponse.token_invalid(request.app))
 	
 	with db_session():
 		User[user_id].set(is_verified=True)
 
-	return html("<p>Email verified</p><a href='/signin'>Login</a>")
+	return html(GenericResponse.email_verify_success(request.app))
 	
 
 @auth.route("/login", methods=["POST"])
