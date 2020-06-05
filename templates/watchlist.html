@@ -18,7 +18,7 @@
         <h3>Go to the <a href="{{url_for('explore.root')}}">Explore</a> tab and find some movies to add here.</h3>
         {% else %}
         <div class="gradient-background row-full"></div>
-        <div class="watchlist-row row-full">
+        <div class="list-row row-full">
             <div class="filler"></div>
             {% for movie in watchlist %}
                 {% include "components/movie.html" %}

@@ -17,37 +17,6 @@
     background: linear-gradient(180deg, #FFFFFF 80%, rgba(255, 255, 255, 0) 100%), #E8E8E8;
 }
 
-.watchlist-row {
-    position: relative;
-    padding-top: 20px;
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.watchlist-row::-webkit-scrollbar {
-    display: none;
-}
-
-.watchlist-row .filler {
-    min-width: 20vw;
-}
-
-.watchlist-row .filler-end {
-    min-width: 20px;
-}
-
-.watchlist-row .scroll-button {
-    position: sticky;
-    height: 48px;
-    min-width: 48px;
-    background: none;
-	border: none;
-    top: 40%;
-    right: 10px;
-    transform: translate(-50%, -50%);
-}
-
 .history-container {
     width: 100%;
 }
@@ -58,10 +27,6 @@ table {
     min-width: 350px;
     overflow-x: scroll;
     scrollbar-width: none;
-}
-
-.watchlist-row::-webkit-scrollbar {
-    display: none;
 }
 
 th {
@@ -110,7 +75,7 @@ table tr:hover button {
 }
 
 @media (max-width:1400px) {
-    .watchlist-row .filler{
+    .list-row .filler{
         min-width: 20px;
     }    
 }

@@ -51,12 +51,7 @@
         margin-top: 150px;
         padding-top: 6vh;
     }
-    .trending-container .row {
-        position: absolute;
-        left: -100px;
-        right: -100px;
-    }
-
+    
     .search-container form input {
         font-size: 48px;
     }
