@@ -30,16 +30,9 @@
     <section class="trending-container">
         <div class="gradient-background-flipped row-full"></div>
         <h2><i class="icon-trending"></i> Trending</h2>
-        <div class="list-row row-full">
-            <div class="filler"></div>
-            {% for movie in trending|batch(5)|first %}
-                {% include "components/movie.html" %}
-            {% endfor %}
-            <button class="scroll-button">
-                <img  src="/static/img/watchlist/next-button.svg" alt="">
-            </button>
-            <div class="filler-end"></div>
-        </div>
+        {% with movies = trending|batch(5)|first %}
+            {% include "components/movie-list.html" %}
+        {% endwith %}
     </section>
     {% endif %}
 </div>

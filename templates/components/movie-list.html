@@ -1,0 +1,14 @@
+<div class="list-row row-full">
+    <div class="filler"></div>
+    <button class="scroll-button left">
+        <img  src="/static/img/watchlist/next-button.svg" alt="">
+    </button>
+    {% for movie in movies %}
+        {% include "components/movie.html" %}
+    {% endfor %}
+    <button class="scroll-button right">
+        <img  src="/static/img/watchlist/next-button.svg" alt="">
+    </button>
+    
+    <div class="filler-end"></div>
+</div>

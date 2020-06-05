@@ -177,32 +177,43 @@ footer a:hover {
     display: none;
 }
 
-.list-row .filler {
-    min-width: 20vw;
-}
-
 .list-row .filler-end {
     min-width: 20px;
 }
 
 .list-row .scroll-button {
-	display: none;
+	visibility: hidden;
     position: sticky;
     height: 48px;
     min-width: 48px;
     background: none;
 	border: none;
-    top: 40%;
-    right: 10px;
-    transform: translate(-50%, -50%);
+	top: 40%;
+	z-index: 3;
+}
+
+.list-row .scroll-button.right {
+	right: 10px;
+	transform: translate(-50%, -50%);
+}
+
+.list-row .scroll-button.left {
+	left: 10px;
+    transform: translate(50%, -50%)  scaleX(-1);
 }
 
 .list-row::-webkit-scrollbar {
     display: none;
 }
 
+@media (min-width: 1200px) {
+	/* .list-row .filler {
+		min-width: 20vw;
+	} */
+}
+
 @media (min-width:800px) {
     section {
 		padding-top: 15vh;
-    }
+	}
 }
