@@ -10,6 +10,7 @@ import requests
 from requests_cache import CachedSession
 from sanic import Blueprint
 from sanic import response
+from scraper import rt_trending
 from .watchlist import default_watchlist, is_in_default_watchlist
 
 explore = Blueprint("explore", url_prefix="/explore")
@@ -21,14 +22,20 @@ async def populate_details(movies):
 		await asyncio.gather(*futures, return_exceptions=True) 
 
 def get_trending():
-	session = CachedSession(expires_after=60*60*24)
-	r = session.get("https://api.themoviedb.org/3/discover/movie", params={
-		"api_key": config.TMDB_API_KEY,
-		"sort_by": "popularity.desc"
-	})
+	# session = CachedSession(expires_after=60*60*24)
+	# r = session.get("https://api.themoviedb.org/3/discover/movie", params={
+	# 	"api_key": config.TMDB_API_KEY,
+	# 	"sort_by": "popularity.desc"
+	# })
+	# movies = []
+	# for movie_json in r.json().get("results", [])[:7]:
+	# 	movie = Movie.from_tmdb(movie_json)
+	# 	movies.append(movie)
+	movies = rt_trending()
 	movies = []
-	for movie_json in r.json().get("results", [])[:7]:
-		movie = Movie.from_tmdb(movie_json)
+	for title, year in titles:
+		movie = Movie()
+		movie.title = "".join([x for x in title if x.isalnum() or x == " "])
 		movies.append(movie)
 	
 	return movies

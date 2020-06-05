@@ -59,11 +59,11 @@ class Movie:
                 "y": self.year
             })
             json = r.json()
-            self.imdb_id = json.get("imdbID")
+            self.__dict__ = Movie.from_omdb(json).__dict__
             if not self.imdb_id:
                 logger.debug("Could not find movie with title '{}' ({})".format(self.title, self.year))
                 return
-
+                
         self.imdb_rating = json.get("imdbRating")
         rt_rating = ([x for x in json.get("Ratings", []) if x["Source"] == "Rotten Tomatoes"] or [{}])[0].get("Value")
         if rt_rating:
