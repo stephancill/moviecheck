@@ -21,6 +21,7 @@ env = Environment(
 	autoescape=select_autoescape(["html"])
 )
 env.globals["url_for"] = app.url_for
+env.globals["app"] = app
 
 app.env = env
 
