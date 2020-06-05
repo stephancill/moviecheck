@@ -76,6 +76,11 @@ async def login_page(request):
 	template = request.app.env.get_template("sign-in.html")
 	return html(template.render())
 
+@app.route("/forgot")
+async def forgot_password_page(request):
+	template = request.app.env.get_template("forgot-password.html")
+	return html(template.render())
+
 if __name__ == "__main__":
 	# ssl = {'cert': "localhost.pem", 'key': "localhost-key.pem"}
 	app.run(host="0.0.0.0", port=8080, debug=True)

@@ -81,12 +81,6 @@ def failure_message(f):
 		return f(request, *args, message, **kwargs)
 	return decorated_function
 
-@auth.route("/forgot", methods=["GET"])
-@failure_message
-async def forgot_password_page(request, message):
-	template = request.app.request.app.env.get_template("forgot_password.html")
-	return html(template.render())
-
 @auth.route("/forgot", methods=["POST"])
 async def forgot_password(request):
 	email = request.form.get("email")
@@ -146,8 +140,8 @@ async def reset_password_page(request, token):
 	except Exception as e:
 		return html("<p>Invalid token</p><a href='/'>Back</a>")
 	
-	template = request.app.request.app.env.get_template("change-password.html")
-	return html(template.render())
+	template = request.app.env.get_template("change-password.html")
+	return html(template.render(token=token))
 
 @auth.route("/reset_password/<token>", methods=["POST"])
 async def reset_password(request, token):
@@ -171,10 +165,10 @@ async def reset_password(request, token):
 		logger.info(e)
 		return redirect(request.app.url_for("reset_password_page")+"?failure={}".format(e))
 
-	password_hash = User.hash_password(password).decode()
+	password_hash = User.hash_password(password)
 	with db_session():
-		User[user_id].set(password_hash=password_hash, active_token=None)
-	return html("<p>Password successfully reset</p><a href='/login'>Login</a>")
+		User[user_id].set(password_hash=password_hash, active_token="")
+	return html("<p>Password successfully reset</p><a href='{}'>Login</a>".format(request.app.url_for("login_page")))
 
 
 @auth.route("/register", methods=["POST"])
