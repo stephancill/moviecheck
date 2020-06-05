@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/generic-response.css">
+{% endblock %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <section>
+        <h2><strong>{{heading}}</strong></h2>
+        <h4>{{subheading}}</h4>
+        <a href="{{link}}"><button type="submit" class="cta-button">{{link_caption}}</button></a>
+    </section>
+    
+</div>
+{% endblock %}
