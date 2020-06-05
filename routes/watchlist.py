@@ -43,11 +43,14 @@ async def root(request, user, watchlist):
 		watchlist_movies.append(movie)
 
 	history = []
-	for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
-		movie = Movie.from_imdb_id(item.imdb_id)
-		movie.date = item.date
-		movie.id = item.id
-		history.append(movie)
+	# For some reason watch_history does not preload properly
+	with db_session():
+		user = User.get(id=user.id)
+		for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
+			movie = Movie.from_imdb_id(item.imdb_id)
+			movie.date = item.date
+			movie.id = item.id
+			history.append(movie)
 
 	template = request.app.env.get_template("watchlist.html")
 	rendered = template.render(user=user, watchlist=watchlist_movies, history=history)

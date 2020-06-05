@@ -25,9 +25,9 @@ def login_required(f):
 			serialized_token = request.cookies.get("token")
 			if not serialized_token: raise Exception("No token, sign in")
 			user_id = serializer.loads(str.encode(serialized_token)).get("user_id")
-			with db_session(strict=False):
+			with db_session():
 				user = User.get(id=user_id)
-				user.watch_history.load()
+				user.load()
 			if not user: raise Exception("Could not find user.")
 		except Exception as e:
 			logger.info(e)
