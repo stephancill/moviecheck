@@ -120,7 +120,7 @@ async def forgot_password(request):
 	""".format(full_url)
 	text = "Reset your password: {}".format(full_url)
 
-	success = send_email(user.email, subject, email_html, text)
+	success = request.app.debug or send_email(user.email, subject, email_html, text)
 	if not success:
 		logger.critical("Could not send email")
 		return redirect(request.app.url_for("auth.forgot_password_page")+"?failure=invalid_email")
@@ -238,7 +238,7 @@ def send_verification_email(request, token):
 	""".format(verification_url)
 	text = "Verify your email: {}".format(verification_url)
 
-	success = send_email(user.email, subject, email_html, text)
+	success = request.app.debug or send_email(user.email, subject, email_html, text)
 	if not success:
 		user.delete()
 		return redirect(request.app.url_for("register_page")+"?failure=invalid_email")
@@ -298,6 +298,15 @@ async def logout(request):
 	response = redirect(request.app.url_for("landing_page"))
 	del response.cookies["token"]
 	return response
+
+@auth.route("/delete_account", methods=["POST"])
+@login_required
+async def delete_account(request, user):
+	with db_session():
+		user = User.get(id=user.id).delete()
+
+	return html(GenericResponse.account_deleted_success(request.app))
+
 
 def send_email(recipient, subject, html, text):
 	msg = MIMEMultipart('alternative')

@@ -89,4 +89,15 @@ class GenericResponse:
             link=app.url_for("login_page"),
             link_caption="Sign in"
         )
+
+    @staticmethod
+    @requires_app
+    def account_deleted_success(app, template):
+        return template.render(
+            title="Success",
+            heading="Account Deleted.",
+            subheading="Your account has been deleted successfully.",
+            link=app.url_for("landing_page"),
+            link_caption="Back"
+        ) 
     

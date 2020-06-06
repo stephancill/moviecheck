@@ -14,8 +14,8 @@ class User(db.Entity):
 	is_verified = Optional(bool)
 	date_registered = Optional(datetime)
 	active_token = Optional(str)
-	watch_history = Set('MovieItem')
-	watchlists = Set('Watchlist')
+	watch_history = Set('MovieItem', cascade_delete=True)
+	watchlists = Set('Watchlist', cascade_delete=True)
 
 	@staticmethod
 	def hash_password(password: str):

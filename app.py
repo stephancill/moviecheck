@@ -82,17 +82,6 @@ async def forgot_password_page(request):
 	template = request.app.env.get_template("forgot-password.html")
 	return html(template.render())
 
-@app.route("/test")
-async def generic_response_page(request):
-	template = request.app.env.get_template("generic-response.html")
-	return html(template.render(
-		title="Success",
-		heading="Password successfully changed.",
-		subheading="You may now use your new password to log in.",
-		link=request.app.url_for("login_page"),
-		link_caption="Login"
-		))
-
 if __name__ == "__main__":
 	# ssl = {'cert': "localhost.pem", 'key': "localhost-key.pem"}
 	app.run(host="0.0.0.0", port=8080, debug=True)

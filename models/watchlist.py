@@ -6,5 +6,5 @@ class Watchlist(db.Entity):
     id = PrimaryKey(int, auto=True)
     is_default = Optional(bool)
     title = Optional(str)
-    movie_items = Set(MovieItem)
+    movie_items = Set(MovieItem, cascade_delete=True)
     user = Required(User)
