@@ -8,6 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer, URLSafeTimedSerializer
 from loguru import logger
 from models.user import User
 from pony.orm import db_session, commit
+from premailer import transform
 from sanic import Blueprint
 from sanic.response import redirect, text, html, empty
 import smtplib
@@ -109,15 +110,9 @@ async def forgot_password(request):
 	response = html(response_html)
 
 	subject = "MovieCheck - Reset your password"
-	email_html = """\
-		<html>
-			<head></head>
-			<body>
-				<p>A password reset link was requested for this account.</p>
-				<a href="{}">Reset your password</a>
-			</body>
-		</html>
-	""".format(full_url)
+	template = request.app.env.get_template("emails/forgot_password.html")
+	rendered = template.render(cta_url=full_url)
+	email_html = transform(rendered)
 	text = "Reset your password: {}".format(full_url)
 
 	success = request.app.debug or send_email(user.email, subject, email_html, text)
@@ -227,15 +222,9 @@ def send_verification_email(request, token):
 	)
 
 	subject = "MovieCheck - Verify your email"
-	email_html = """\
-		<html>
-			<head></head>
-			<body>
-				<p>Thank you for signing up for MovieCheck!</p>
-				<a href="{}">Verify email</a>
-			</body>
-		</html>
-	""".format(verification_url)
+	template = request.app.env.get_template("emails/confirm_email.html")
+	rendered = template.render(cta_url=verification_url)
+	email_html = transform(rendered)
 	text = "Verify your email: {}".format(verification_url)
 
 	success = request.app.debug or send_email(user.email, subject, email_html, text)

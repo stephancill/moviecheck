@@ -1,0 +1,21 @@
+{% extends "emails/base.html" %}
+
+{% block name %}Confirm Email{% endblock %}
+
+{% block content %}
+<tr>
+    <td class="content-block">
+        Thank your for creating an account.
+    </td>
+</tr>
+<tr>
+    <td class="content-block">
+        Please confirm your email address by clicking the link below.
+    </td>
+</tr>
+<tr>
+    <td class="content-block" itemprop="handler" itemscope itemtype="http://schema.org/HttpActionHandler">
+        <a href="{{cta_url}}" itemprop="url"><button class="cta-button">Confirm email address</button></a>
+    </td>
+</tr>
+{% endblock %}
