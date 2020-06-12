@@ -4,7 +4,7 @@ from loguru import logger
 from models import db
 from premailer import transform
 from routes import api
-from routes.auth import login_required, is_user_logged_in
+from routes.auth import login_required, is_user_logged_in, failure_message
 from routes.explore import get_trending
 import sanic
 from sanic.response import html, text, json, redirect
@@ -48,36 +48,16 @@ async def account_page(request, user):
 	return html(template.render(user=user))
 
 @app.route("/signup")
-async def register_page(request):
-	failure = request.args.get("failure")
-	message = None
-	if failure:
-		if failure == "name_missing":
-			message = "First or last name missing."
-		elif failure == "credential_missing":
-			message = "Email or password missing."
-		elif failure == "password_matching":
-			message = "Passwords do not match."
-		elif failure == "invalid_email":
-			message = "The email address you entered is invalid."
-		else:
-			message = "Something went wrong"
-
+@failure_message
+async def register_page(request, message):
 	template = request.app.env.get_template("sign-up.html")
-	return html(template.render())
+	return html(template.render(failure=message))
 
 @app.route("/signin")
-async def login_page(request):
-	failure = request.args.get("failure")
-	message = None
-	if failure:
-		if failure == "password":
-			message = "Incorrect email/password combination."
-		else:
-			message = "Something went wrong." 
-
+@failure_message
+async def login_page(request, message):
 	template = request.app.env.get_template("sign-in.html")
-	return html(template.render())
+	return html(template.render(failure=message))
 
 @app.route("/forgot")
 async def forgot_password_page(request):
