@@ -9,11 +9,13 @@
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<!-- TODO: Error messages -->
 <div class="container">
     <section>
-        <form action="{{url_for('auth.register')}}" method="POST">
+        <form class="mx-auto" action="{{url_for('auth.register')}}" method="POST">
             <h2><strong>Let's get started.</strong></h2>
+            {% if failure %}
+            <p class="failure-message">{{failure}}</p>
+            {% endif %}
             <div class="row">
                 <div class="form-field col-xl">
                     <h5>First name</h5>
