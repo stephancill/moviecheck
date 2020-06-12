@@ -4,7 +4,6 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-premailer = "*"
 
 [packages]
 sanic = "*"
@@ -16,6 +15,7 @@ bcrypt = "*"
 requests-cache = "*"
 pony = "*"
 psycopg2-binary = "*"
+premailer = "*"
 
 [requires]
 python_version = "3.6"
