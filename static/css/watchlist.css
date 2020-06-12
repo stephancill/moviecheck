@@ -24,7 +24,7 @@
 table {
     display: block;
     width: 90%;
-    min-width: 350px;
+    min-width: 300px;
     overflow-x: scroll;
     scrollbar-width: none;
 }
