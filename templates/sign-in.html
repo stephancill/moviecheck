@@ -13,8 +13,11 @@
 
 <div class="container">
     <section>
-        <form action="{{url_for('auth.login')}}" method="POST">
+        <form class="mx-auto" action="{{url_for('auth.login')}}" method="POST">
             <h2><strong>Welcome back.</strong></h2>
+            {% if failure %}
+            <p class="failure-message">{{failure}}</p>
+            {% endif %}
             <div class="form-field">
                 <h5>Email address</h5>
                 <input type="email" name="email" required>
