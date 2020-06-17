@@ -308,7 +308,7 @@ def send_email(recipient, subject, html, text):
 	msg.attach(part2)
 	
 	s = smtplib.SMTP(config.EMAIL_SMTP_SERVER)
-	s.login(config.EMAIL_ADDRESS, config.EMAIL_PASSWORD)
+	s.login(config.EMAIL_USERNAME, config.EMAIL_PASSWORD)
 	try:
 		s.send_message(msg)
 	except SMTPRecipientsRefused as e:
