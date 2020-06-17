@@ -41,6 +41,8 @@ async def root(request, user, watchlist):
 		movie = Movie.from_imdb_id(item.imdb_id)
 		movie.in_watchlist = True
 		watchlist_movies.append(movie)
+	
+	await Movie.batch_populate_details(watchlist_movies)
 
 	history = []
 	# For some reason watch_history does not preload properly
@@ -48,6 +50,7 @@ async def root(request, user, watchlist):
 		user = User.get(id=user.id)
 		for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
 			movie = Movie.from_imdb_id(item.imdb_id)
+			movie.populate_details()
 			movie.date = item.date
 			movie.id = item.id
 			history.append(movie)

@@ -4,7 +4,6 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 def requires_app(f):
     @wraps(f)
     def wrapper(app, *args, **kwargs):
-        print(app)
         template = app.env.get_template("generic-response.html")
         return f(app, template, *args, **kwargs)
     return wrapper

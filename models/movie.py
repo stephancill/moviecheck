@@ -1,6 +1,9 @@
+import asyncio
 import config
+from concurrent.futures import ThreadPoolExecutor
 from loguru import logger
 from requests_cache import CachedSession
+import scraper
 
 class Movie:
     def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, genres=[], rt_rating=None, imdb_rating=None, in_watchlist=False):
@@ -70,4 +73,11 @@ class Movie:
             self.rt_rating = rt_rating.split("/")[0]
 
         self.genres = json.get("Genre", "").split(", ")
+
+    @staticmethod
+    async def batch_populate_details(movies):
+        with ThreadPoolExecutor(max_workers=20) as executor:
+            loop = asyncio.get_event_loop()
+            futures = [loop.run_in_executor(executor, movie.populate_details) for movie in movies]
+            await asyncio.gather(*futures, return_exceptions=True)
         
