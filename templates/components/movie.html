@@ -18,10 +18,12 @@
     {% endblock %}
     <div class="gradient-overlay">
         {% if movie.rt_rating is string %}
-        <div class="rating rt-rating">
-            <img src="/static/img/rt-logo.png" alt="">
-            <span>{{movie.rt_rating}}</span>
-        </div>
+        <a href="{{movie.rt_url}}" target="_blank">
+            <div class="rating rt-rating">
+                <img src="/static/img/rt-logo.png" alt="">
+                <span>{{movie.rt_rating}}</span>
+            </div>
+        </a>
         {% endif %}
         {% if movie.imdb_rating is string %}
         <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank">
