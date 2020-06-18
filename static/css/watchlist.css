@@ -45,6 +45,16 @@ td {
     padding-left: 35px;
 }
 
+td a {
+	/* text-decoration: underline; */
+	color: #383838;
+}
+
+td a:hover {
+	color: #383838;
+	text-decoration: underline;
+}
+
 tr {
     border-bottom: 2px solid #E2E2E2;
     height: 68px;
