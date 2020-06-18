@@ -35,5 +35,5 @@
         {% endif %}
         <img class="poster" src="{{movie.poster_url}}" alt="">
     </div>
-    <span><strong>{{movie.title}}</strong> ({{movie.year}})</span>
+    <span><a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"><strong>{{movie.title}}</strong> ({{movie.year}})</a> </span>
 </div>

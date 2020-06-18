@@ -66,6 +66,14 @@
     transform: translate(-50%, -50%);
 }
 
+.movie a {
+	color: #000000;
+}
+
+.movie a:hover {
+	color: #000000;
+	text-decoration: none;
+}
 
 .not-watchlist .watchlist-buttons  {
 	display: none;
