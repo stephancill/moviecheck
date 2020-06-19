@@ -1,9 +1,6 @@
 .rating {
     display: none;
 }
-.movie .gradient-overlay {
-    background: none !important;
-}
 
 .watchlist-container {
     position: relative;

@@ -10,8 +10,8 @@
 
 .movie .gradient-overlay {
     position: relative;
-	background: linear-gradient(180deg, rgba(0, 0, 0, 0) 51.56%, #000000 100%);
 	border-radius: 7px;
+	background: none;
 }
 
 .movie .poster {
@@ -25,7 +25,7 @@
 	margin-bottom: 17px;
 }
 
-.movie span {
+.movie .title {
 	max-width: 90%;
 	margin-left: auto;
 	margin-right: auto;
@@ -36,17 +36,46 @@
 	color: #000000;
 }
 
-.movie span strong {
+.movie .title {
+	font-weight: 300;
+	font-size: 16px;
+	line-height: 18px;
+}
+
+.movie .title strong {
 	color: inherit;
 	font-weight: 600;
+	font-size: 22px;
+	line-height: 24px;
 }
 
 .movie form button {
 	position: absolute;
-	padding: 0;
 	z-index: 2;
 	background: none;
 	border: none;
+	display: none;
+	/* background-color: white;
+	color: var(--brand-main); */
+	background-color: var(--brand-main);
+	color: white;
+	height: 33px;
+	padding: 0px 9px 0px 10px;
+	border-radius: 7px;
+	font-weight: 800;
+	font-size: 18px;
+	line-height: 22px;
+}
+
+.movie form button * {
+	box-shadow: 0px 0.3px 0.4px rgba(0, 0, 0, 1);
+}
+
+.movie form i {
+	font-size: 16px;
+}
+
+.movie form span {
 	display: none;
 }
 
@@ -54,16 +83,23 @@
 	display: block;
 }
 
+.movie:hover button:hover span {
+	display: inline-block;
+	padding-left: 4px;
+}
+
+.movie:hover .gradient-overlay {
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0) 68.23%);
+}
+
 .movie form .right {
     top: 10px;
     right: 10px;
-    transform: translate(50%, -50%);
 }
 
 .movie form .left {
     top: 10px;
     left: 10px;
-    transform: translate(-50%, -50%);
 }
 
 .movie a {
@@ -91,27 +127,34 @@
 	display: none;
 }
 
-.movie .rating {
-    position: absolute;
-    bottom: 10px;
-    z-index: 2;
+.movie .ratings {
+	margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	font-weight: 300;
+	font-size: 16px;
+	line-height: 18px;
+	color: black;
 }
 
 .movie .rating img {
     margin-bottom: 3px;
 }
 
-.movie .rating span {
-    font-weight: bold;
-    font-size: 18px;
-    line-height: 22px;
-    color: #DBDBDB;
-}
-
 .movie .rt-rating {
-    left: 16px;
+    margin-right: 6px;
 }
 
 .movie .imdb-rating {
-    right: 16px;
+    margin-left: 6px;
+}
+
+
+@media (max-width:800px) {
+    .movie form button {
+		display: block;
+	}
+	.movie .gradient-overlay {
+		background: linear-gradient(180deg, rgba(0, 0, 0, 0.52) 0%, rgba(0, 0, 0, 0) 68.23%);
+	}
 }

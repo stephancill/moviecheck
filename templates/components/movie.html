@@ -3,35 +3,39 @@
     <div class="movie-actions {{'watchlist' if movie.in_watchlist else 'not-watchlist'}}">
         <div class="not-watchlist-buttons">
             <form action="{{url_for('watchlist.add', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/explore/add-button.svg" title="Add to watchlist"></button>
+                <button class="left" type="submit"><i class="icon-plus"></i><span>Add</span></button>
             </form>
         </div>
         <div class="watchlist-buttons">
             <form action="{{url_for('watchlist.remove', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="right" type="submit"><img src="/static/img/watchlist/remove-button.svg" title="Remove from watchlist"></button>
+                <button class="right" type="submit"><i class="icon-cross"></i><span>Remove</span></button>
             </form>
             <form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/watchlist/check-button-lg.svg" title="Mark as seen"></button>
+                <button class="left" type="submit"><i class="icon-tick"></i><span>Seen</span></button>
             </form>
         </div>
     </div>
     {% endblock %}
     <div class="gradient-overlay">
+        <img class="poster" src="{{movie.poster_url}}" alt="">
+    </div>
+    <span class="title"><a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"><strong>{{movie.title}}</strong> ({{movie.year}})</a> </span>
+    <div class="ratings">
         {% if movie.rt_rating is string %}
-        <div class="rating rt-rating">
+        <span class="rating rt-rating">
             <img src="/static/img/rt-logo.png" alt="">
             <span>{{movie.rt_rating}}</span>
-        </div>
+        </span>
         {% endif %}
         {% if movie.imdb_rating is string %}
         <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank">
-            <div class="rating imdb-rating">
+            <span class="rating imdb-rating">
                 <img src="/static/img/imdb-logo.png" alt="">
                 <span>{{movie.imdb_rating}}</span>
-            </div>
+            </span>
         </a>
         {% endif %}
-        <img class="poster" src="{{movie.poster_url}}" alt="">
     </div>
-    <span><a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"><strong>{{movie.title}}</strong> ({{movie.year}})</a> </span>
+        
+        
 </div>
