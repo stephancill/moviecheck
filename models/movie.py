@@ -3,10 +3,11 @@ from loguru import logger
 from requests_cache import CachedSession
 
 class Movie:
-    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, genres=[], rt_rating=None, imdb_rating=None, in_watchlist=False):
+    def __init__(self, title=None, poster_url=None, year=None, imdb_id=None, type="movie", genres=[], rt_rating=None, imdb_rating=None, in_watchlist=False):
         self.title = title
         self.year = year
         self.imdb_id = imdb_id
+        self.type = type
         self.poster_url = poster_url
         self.genres = genres
         self.rt_rating = rt_rating
@@ -19,9 +20,13 @@ class Movie:
             "Title": "title",
             "Year": "year",
             "imdbID": "imdb_id",
-            "Poster": "poster_url"
+            "Poster": "poster_url",
+            "Type": "type"
         }
-        return Movie(**{omdb_keymap[key]: value for key, value in json.items() if key in omdb_keymap})
+        movie = Movie(**{omdb_keymap[key]: value for key, value in json.items() if key in omdb_keymap})
+        if movie.poster_url == "N/A":
+            movie.poster_url = None
+        return movie
 
     @staticmethod
     def from_tmdb(json):

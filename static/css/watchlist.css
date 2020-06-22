@@ -14,6 +14,10 @@
     background: linear-gradient(180deg, #FFFFFF 80%, rgba(255, 255, 255, 0) 100%), #E8E8E8;
 }
 
+.movie .gradient-overlay {
+    background: none !important;
+}
+
 .history-container {
     width: 100%;
 }

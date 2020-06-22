@@ -22,7 +22,9 @@
         <h2><i class="icon-discover"></i> Results</h2>
         <div class="row">
             {% for movie in results %}
+            {% if movie.poster_url %}
                 {% include "components/movie.html" %}
+            {% endif %}
             {% endfor %}
         </div>
     </section>

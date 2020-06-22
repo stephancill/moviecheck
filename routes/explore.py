@@ -52,8 +52,7 @@ async def search(request, user):
 	session = CachedSession(expires_after=60*60*24)
 	r = session.get("http://www.omdbapi.com/", params={
 		"apiKey": config.OMDB_API_KEY,
-		"s": query,
-		"type": "movie"
+		"s": query
 	})
 	json = r.json()
 	movies = []
