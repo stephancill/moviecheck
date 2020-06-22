@@ -275,7 +275,7 @@ async def login(request):
 		return redirect(request.app.url_for("auth.send_verification_email", token=temp_token))
 
 	response = redirect(request.app.url_for("landing_page"))
-	serializer = TimedJSONWebSignatureSerializer(config.JWT_SECRET, expires_in=60*60*24)
+	serializer = TimedJSONWebSignatureSerializer(config.JWT_SECRET, expires_in=60*60*24*7)
 	access_token = serializer.dumps({"user_id": str(user.id)})
 	response.cookies["token"] = access_token.decode()
 	response.cookies["token"]["expires"] = datetime.now() + timedelta(days=1)

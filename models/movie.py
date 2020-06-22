@@ -6,7 +6,7 @@ from requests_cache import CachedSession
 import scraper
 
 class Movie:
-    def __init__(self, title=None, year=None, imdb_id=None): # poster_url=None, genres=[], rt_rating=None, imdb_rating=None, in_watchlist=False
+    def __init__(self, title=None, year=None, imdb_id=None):
         self.title = title
         self.year = year
         self.imdb_id = imdb_id

@@ -3,15 +3,15 @@
     <div class="movie-actions {{'watchlist' if movie.in_watchlist else 'not-watchlist'}}">
         <div class="not-watchlist-buttons">
             <form action="{{url_for('watchlist.add', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/explore/add-button.svg" title="Add to watchlist"></button>
+                <button class="left" type="submit"><i class="icon-plus"></i><span>Add</span></button>
             </form>
         </div>
         <div class="watchlist-buttons">
             <form action="{{url_for('watchlist.remove', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="right" type="submit"><img src="/static/img/watchlist/remove-button.svg" title="Remove from watchlist"></button>
+                <button class="right" style="background-color: #727272;" type="submit"><i class="icon-cross"></i><span>Remove</span></button>
             </form>
             <form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}" method="POST">
-                <button class="left" type="submit"><img src="/static/img/watchlist/check-button-lg.svg" title="Mark as seen"></button>
+                <button class="left" type="submit"><i class="icon-tick"></i><span>Seen</span></button>
             </form>
         </div>
     </div>
@@ -27,13 +27,20 @@
         {% endif %}
         {% if movie.imdb_rating is string %}
         <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank">
-            <div class="rating imdb-rating">
+            <span class="rating imdb-rating">
                 <img src="/static/img/imdb-logo.png" alt="">
                 <span>{{movie.imdb_rating}}</span>
-            </div>
+            </span>
         </a>
         {% endif %}
         <img class="poster" src="{{movie.poster_url}}" alt="">
     </div>
-    <span><a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"><strong>{{movie.title}}</strong> ({{movie.year}})</a> </span>
+    <span class="title">
+        {% if movie.type == "series" %}
+        <i class="icon-tv"></i>
+        {% elif movie.type == "movie" %}
+        <i class="icon-film" title="Movie" alt="Movie"></i>
+        {% endif %}
+        <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"> <strong>{{movie.title}}</strong> ({{movie.year}})</a>
+    </span>
 </div>
