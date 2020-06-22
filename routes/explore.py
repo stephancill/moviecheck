@@ -59,7 +59,8 @@ async def search(request, user):
 	for movie_json in r.json().get("Search", []):
 		movie = Movie.from_omdb(movie_json)
 		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)
-		movies.append(movie)
+		if movie.type in ["series", "movie"]:
+			movies.append(movie)
 	
 	await populate_details(movies)
 
