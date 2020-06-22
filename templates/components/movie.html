@@ -16,6 +16,8 @@
         </div>
     </div>
     {% endblock %}
+    
+    {% block footer %}
     <div class="gradient-overlay">
         {% if movie.rt_rating is string %}
         <span class="rating rt-rating">
@@ -41,4 +43,5 @@
         {% endif %}
         <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank"> <strong>{{movie.title}}</strong> ({{movie.year}})</a>
     </span>
+    {% endblock %}
 </div>

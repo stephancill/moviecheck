@@ -65,6 +65,10 @@ class Movie:
             })
             json = r.json()
             self.imdb_id = json.get("imdbID")
+            self.year = json.get("Year")
+            self.poster_url = json.get("Poster")
+            self.type = json.get("Type")
+            print(self.title, self.imdb_id)
             if not self.imdb_id:
                 logger.debug("Could not find movie with title '{}' ({})".format(self.title, self.year))
                 return

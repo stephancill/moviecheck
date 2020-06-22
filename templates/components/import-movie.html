@@ -1,0 +1,14 @@
+{% extends "components/movie.html" %}
+
+{% block buttons %}
+<div class="movie-actions"> 
+    <form action="{{url_for('watchlist.seen', movie_id=movie.imdb_id)}}?date={{date}}" method="POST">
+        <button class="left" type="submit"><i class="icon-history"></i><span>Add</span></button>
+    </form>
+</div>
+{% endblock %}
+
+{% block footer %}
+{{super()}}
+<div>Seen: {{movie.date.strftime('%Y-%m-%d')}}</div>
+{% endblock %}

@@ -7,7 +7,7 @@ from models.user import User
 from models.watchlist import Watchlist
 from models.movie_item import MovieItem
 from models.movie import Movie
-from pony.orm import db_session, select
+from pony.orm import db_session, select, commit
 from sanic import Blueprint
 from sanic import response
 
@@ -19,6 +19,21 @@ def is_in_default_watchlist(imdb_id, user):
 		lambda w: imdb_id in w.movie_items.imdb_id and 
 		w.is_default and 
 		w.user.id == user.id).first() != None
+
+@db_session
+def is_in_history(imdb_id, user):
+	return User.select(
+		lambda u: imdb_id in u.watch_history.imdb_id and
+		user.id == u.id
+	).first() != None
+
+@db_session
+def history_id(imdb_id, date, user):
+	return User.select(
+		lambda u: imdb_id in u.watch_history.imdb_id and
+		date in u.watch_history.date and
+		user.id == u.id
+	).first()
 	
 def default_watchlist(f):
 	@wraps(f)
@@ -77,8 +92,15 @@ async def seen(request, user, watchlist, movie_id):
 		watchlist = Watchlist.get(id=watchlist.id)
 		user = User.get(id=user.id)
 		MovieItem.select(lambda m: m.imdb_id == movie_id and m.watchlist.id == watchlist.id).delete()
-		movie = MovieItem(imdb_id=movie_id, date=datetime.now(), user=user)
+		date_string = request.args.get("date", None)
+		if date_string:
+			date = datetime.strptime(date_string, "%Y-%m-%d")
+		else:
+			date = datetime.now()
+		movie = MovieItem(imdb_id=movie_id, date=date, user=user)
+
 	return response.empty()
+
 
 @watchlist.route("/remove/<movie_id>", methods=["POST"])
 @login_required
@@ -95,7 +117,15 @@ async def remove(request, user, watchlist, movie_id):
 async def remove_history(request, user, item_id):
 	logger.debug(item_id)
 	with db_session():
-		MovieItem.select(lambda m: m.id == item_id).delete()
+		date_string = request.args.get("date", None)
+		if date_string:
+			date = datetime.strptime(date_string, "%Y-%m-%d")
+			MovieItem.select(
+				lambda m: m.id == item_id and 
+				m.date == date
+			).delete()
+		else:
+			MovieItem.select(lambda m: m.id == item_id).delete()
 	return response.empty()
 
 @watchlist.route("/edit_history/<item_id>", methods=["POST"])

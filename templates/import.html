@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% set active_page = "explore" %}
+
+{% block head %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/explore.css">
+<link rel="stylesheet" href="/static/css/movie.css">
+{% endblock %}
+
+{% block title %}Import{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <section>
+        <h2>Select source</h2>
+        <h3>Netflix (.csv)</h3>
+        <form enctype="multipart/form-data" action="{{url_for('import_external.root')}}" method="POST">
+            <input type="file" name="netflix-data" accept=".csv" required>
+            <button type="submit">Upload</button>
+        </form>
+    </section>
+    
+    {% if results %}
+    <section class="results-container">
+        <h2><i class="icon-discover"></i> Results</h2>
+        <div class="row">
+            {% for movie in results %}
+            <div>
+                {% include "components/import-movie.html" %}
+            </div>
+                
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+<script src="/static/js/import.js"></script>
+{% endblock %}
