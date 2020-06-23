@@ -36,7 +36,7 @@ async def landing_page(request, is_logged_in):
 	if is_logged_in:
 		return redirect(app.url_for("watchlist.root"))
 	else:
-		trending = get_trending()
+		trending = await get_trending(4)
 		template = env.get_template("landing-page.html")
 		return html(template.render(trending=trending))
 

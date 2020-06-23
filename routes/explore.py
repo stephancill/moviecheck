@@ -13,16 +13,18 @@ from .watchlist import default_watchlist, is_in_default_watchlist
 
 explore = Blueprint("explore", url_prefix="/explore")
 
-def get_trending():
+async def get_trending(count=5):
 	titles = imdb_trending()
 	movies = []
-	for title, year, imdb_id in titles:
+	for title, year, imdb_id in titles[:count]:
 		movie = ResultMovie()
 		movie.title = title
 		movie.year = year
 		movie.imdb_id = imdb_id
 		movies.append(movie)
 	
+	await ResultMovie.batch_populate_details(movies)
+
 	return movies
 
 @explore.route("/")
@@ -30,7 +32,7 @@ def get_trending():
 async def root(request, user):
 	# TODO: Centralize this initialization (in_watchlist, populate_details)
 	template = request.app.env.get_template("explore.html")
-	trending = get_trending()[:5]
+	trending = await get_trending(5)
 	await ResultMovie.batch_populate_details(trending)
 	for movie in trending:
 		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)

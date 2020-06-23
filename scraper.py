@@ -41,7 +41,7 @@ def rt_trending():
     session = CachedSession(expire_after=60*60*24)
     page = session.get("https://www.rottentomatoes.com").text
     soup = BeautifulSoup(page, "html.parser")
-    return [(x.get_text(), None) for x in soup.select(".dynamic-text-list__item-title")]
+    return [(x.get_text(), None, None) for x in soup.select(".dynamic-text-list__item-title")]
 
 def imdb_trending():
     session = CachedSession(expire_after=60*60*24)
