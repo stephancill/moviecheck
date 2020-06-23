@@ -156,7 +156,13 @@ def rt_rating(stripped_title, year, json):
                 rating = movie.get("meterScore")
                 if rating:
                     return "{}%".format(rating)
-                return None
+    for show in json.get("tvSeries", []):
+        if str(show.get("startYear")) in str(year) or str(show.get("endYear")) in str(year):
+            title_stripped = "".join([x for x in show.get("title") if x.isalnum() or x == " "]).lower().strip()
+            if stripped_title in title_stripped or title_stripped in stripped_title:
+                rating = show.get("meterScore")
+                if rating:
+                    return "{}%".format(rating)
     return None
 
 @rt_search_wrapper
@@ -166,6 +172,14 @@ def rt_url(stripped_title, year, json):
             title_stripped = "".join([x for x in movie.get("name") if x.isalnum() or x == " "]).lower().strip()
             if stripped_title in title_stripped or title_stripped in stripped_title:
                 url = movie.get("url")
+                if url:
+                    return "https://www.rottentomatoes.com{}".format(url)
+                return None
+    for show in json.get("tvSeries", []):
+        if str(show.get("startYear")) in str(year) or str(show.get("endYear")) in str(year):
+            title_stripped = "".join([x for x in show.get("title") if x.isalnum() or x == " "]).lower().strip()
+            if stripped_title in title_stripped or title_stripped in stripped_title:
+                url = show.get("url")
                 if url:
                     return "https://www.rottentomatoes.com{}".format(url)
                 return None

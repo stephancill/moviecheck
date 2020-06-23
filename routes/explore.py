@@ -40,14 +40,18 @@ async def root(request, user):
 @login_required
 async def search(request, user):
 	query = request.args.get("query", default="").strip()
+	session = CachedSession(expires_after=60*60*24)
+	r = session.get("http://www.omdbapi.com/", params={
+		"apiKey": config.OMDB_API_KEY,
+		"s": query
+	})
+	json = r.json()
 	movies = []
-	for title, year, imdb_id in imdb_search(query):
-		movie = ResultMovie(
-			imdb_id=imdb_id,
-			title=title,
-			year=year,
-			in_watchlist=is_in_default_watchlist(imdb_id, user)
-		)
+	for movie_json in r.json().get("Search", []):
+		if not movie_json.get("Type") in ["series", "movie"] or movie_json.get("Poster") == "N/A":
+			continue
+		movie = ResultMovie(imdb_id=movie_json.get("imdbID"))
+		movie.in_watchlist = is_in_default_watchlist(movie.imdb_id, user)
 		movies.append(movie)
 	
 	await Movie.batch_populate_details(movies)

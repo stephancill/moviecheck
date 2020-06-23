@@ -1,36 +1,46 @@
 import asyncio
 import config
 from concurrent.futures import ThreadPoolExecutor
+from functools import wraps
 from loguru import logger
 from requests_cache import CachedSession
 import scraper
 
+def requires_omdb_json(f):
+    @wraps(f)
+    def wrapper(self, *args, **kwargs):
+        if not self.omdb_json:
+            session = CachedSession(expires_after=60*60*24*7)
+            if self.imdb_id:
+                r = session.get("http://www.omdbapi.com/", params={
+                    "apiKey": config.OMDB_API_KEY,
+                    "i": self.imdb_id
+                })
+                self.omdb_json = r.json()
+            else:
+                r = session.get("http://www.omdbapi.com/", params={
+                    "apiKey": config.OMDB_API_KEY,
+                    "t": self.title,
+                    "y": self.year
+                })
+                self.omdb_json = r.json()
+        return f(self, self.omdb_json, *args, **kwargs)
+    return wrapper
+
 class Movie:
-    def __init__(self, title=None, year=None, imdb_id=None):
+    def __init__(self, title=None, year=None, imdb_id=None, type=None, omdb_json=None):
         self.title = title
         self.year = year
         self.imdb_id = imdb_id
-        self.imdb_soup = None
+        self.type = type
+        self.omdb_json = omdb_json
 
-    def get_imdb_soup(self):
-        if not self.imdb_soup:
-            self.imdb_soup = scraper.imdb_page_soup(imdb_id=self.imdb_id)
-        return self.imdb_soup
-
-    def populate_details(self):
-        session = CachedSession(expires_after=60*60*24)
-        if not self.imdb_id:
-            result = scraper.imdb_search_year(self.title, self.year)
-            if not result:
-                return
-            _, _, imdb_id = result
-            self.imdb_id = imdb_id
-        
-        self.get_imdb_soup()
-        
-        # Order matters when manipulating soup (copies take too long)
-        self.year = scraper.imdb_year(soup=self.imdb_soup)
-        self.title = scraper.imdb_title(soup=self.imdb_soup)
+    @requires_omdb_json
+    def populate_details(self, json):     
+        self.year = json.get("Year")
+        self.title = json.get("Title")
+        self.imdb_id = json.get("imdbID")
+        self.type = json.get("Type")
 
     @staticmethod
     async def batch_populate_details(movies):
@@ -40,22 +50,26 @@ class Movie:
             await asyncio.gather(*futures, return_exceptions=True)
         
 class ResultMovie(Movie):
-    def __init__(self, poster_url=None, rt_rating=None, rt_url=None, imdb_rating=None, in_watchlist=False, *args, **kwargs):
+    def __init__(self, poster_url=None, rt_rating=None, rt_url=None, imdb_rating=None, imdb_url=None, in_watchlist=False, *args, **kwargs):
         self.poster_url = poster_url
         self.imdb_rating = imdb_rating
+        self.imdb_url = imdb_url
         self.rt_rating = rt_rating
         self.rt_url = rt_url
         self.in_watchlist = in_watchlist
         super().__init__(*args, **kwargs)
 
-    def populate_details(self):
-        self.get_imdb_soup()
-        self.imdb_rating = scraper.imdb_rating(soup=self.imdb_soup)
-        self.poster_url = scraper.imdb_poster_url(soup=self.imdb_soup)
+    @requires_omdb_json
+    def populate_details(self, json):
+        super().populate_details()
+        self.poster_url = json.get("Poster")
+        self.imdb_rating = json.get("imdbRating")
+        if json.get("imdbID"):
+            self.imdb_url = "https://www.imdb.com/title/" + json.get("imdbID")
         self.rt_rating = scraper.rt_rating(self.title, self.year)
         if self.rt_rating:
             self.rt_url = scraper.rt_url(self.title, self.year)
-        super().populate_details()
+        
         
 class WatchlistMovie(Movie):
     def __init__(self, poster_url=None, in_watchlist=False, *args, **kwargs):
@@ -63,10 +77,10 @@ class WatchlistMovie(Movie):
         self.in_watchlist = in_watchlist
         super().__init__(*args, **kwargs)
 
-    def populate_details(self):
-        self.get_imdb_soup()
-        self.poster_url = scraper.imdb_poster_url(soup=self.imdb_soup)
+    @requires_omdb_json
+    def populate_details(self, json):
         super().populate_details()
+        self.poster_url = json.get("Poster")
     
 class HistoryMovie(Movie):
     def __init__(self, genres=None, id=None, date=None, *args, **kwargs):
@@ -75,7 +89,7 @@ class HistoryMovie(Movie):
         self.date = date
         super().__init__(*args, **kwargs)
 
-    def populate_details(self):
-        self.get_imdb_soup()
-        self.genres = scraper.imdb_genres(soup=self.imdb_soup)
+    @requires_omdb_json
+    def populate_details(self, json):
         super().populate_details()
+        self.genres = json.get("Genre", "").split(", ")
