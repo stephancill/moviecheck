@@ -93,3 +93,8 @@ class HistoryMovie(Movie):
     def populate_details(self, json):
         super().populate_details()
         self.genres = json.get("Genre", "").split(", ")
+
+class ImportResultMovie(WatchlistMovie):
+    def __init__(self, date=None, *args, **kwargs):
+        self.date = date
+        super().__init__(*args, **kwargs)
