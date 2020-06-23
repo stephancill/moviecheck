@@ -6,8 +6,8 @@ from loguru import logger
 from models.user import User
 from models.watchlist import Watchlist
 from models.movie_item import MovieItem
-from models.movie import Movie
-from pony.orm import db_session, select, commit
+from models.movie import Movie, WatchlistMovie, HistoryMovie
+from pony.orm import db_session, select
 from sanic import Blueprint
 from sanic import response
 
@@ -53,19 +53,20 @@ def default_watchlist(f):
 async def root(request, user, watchlist):
 	watchlist_movies = []
 	for item in sorted(watchlist.movie_items, key=lambda x: x.date, reverse=True):
-		movie = Movie.from_imdb_id(item.imdb_id)
-		movie.in_watchlist = True
+		movie = WatchlistMovie(imdb_id=item.imdb_id, in_watchlist=True)
 		watchlist_movies.append(movie)
+
+	await Movie.batch_populate_details(watchlist_movies)
 
 	history = []
 	# For some reason watch_history does not preload properly
 	with db_session():
 		user = User.get(id=user.id)
 		for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
-			movie = Movie.from_imdb_id(item.imdb_id)
-			movie.date = item.date
-			movie.id = item.id
+			movie = HistoryMovie(imdb_id=item.imdb_id, id=item.id, date=item.date)
 			history.append(movie)
+	
+	await Movie.batch_populate_details(history)
 
 	template = request.app.env.get_template("watchlist.html")
 	rendered = template.render(user=user, watchlist=watchlist_movies, history=history)
