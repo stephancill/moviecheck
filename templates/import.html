@@ -14,7 +14,10 @@
 <div class="container">
     <section>
         <h2>Select source</h2>
-        <h3>Netflix (.csv)</h3>
+        <div class="mb-3">
+            <h3>Netflix Viewing Activity(.csv)</h3>
+            <span><a href="https://help.netflix.com/en/node/101917" target="_blank" rel="noopener noreferrer">Help</a></span>
+        </div>
         <form enctype="multipart/form-data" action="{{url_for('import_external.root')}}" method="POST">
             <input type="file" name="netflix-data" accept=".csv" required>
             <button type="submit">Upload</button>
