@@ -30,7 +30,6 @@ $(document).ready(function() {
     $(".history-container tr .rating-form input").change(function (e) {
         let button = $(this)
         let form = button.parents("form")
-        console.log(form)
         const data = new FormData(form[0]);
         fetch(form.attr("action"), {
             method: form.attr("method"),
