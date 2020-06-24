@@ -8,3 +8,4 @@ class MovieItem(db.Entity):
     date = Optional(datetime)
     user = Optional(User)
     watchlist = Optional('Watchlist')
+    rating = Optional(int)

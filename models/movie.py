@@ -83,10 +83,11 @@ class WatchlistMovie(Movie):
         self.poster_url = json.get("Poster")
     
 class HistoryMovie(Movie):
-    def __init__(self, genres=None, id=None, date=None, *args, **kwargs):
+    def __init__(self, genres=None, id=None, date=None, rating=None, *args, **kwargs):
         self.genres = genres
         self.id = id
         self.date = date
+        self.rating = rating
         super().__init__(*args, **kwargs)
 
     @requires_omdb_json

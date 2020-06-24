@@ -1,0 +1,45 @@
+{% set date = movie.date.strftime('%Y-%m-%d') %}
+<tr>
+    <td class="shrink date-container" style="padding-right: 40px;">
+        <div class="date">
+            {{date}}
+            <button type="submit"><i class="icon-pencil"></i></button>
+        </div>
+        <form action="{{url_for('watchlist.edit_history', item_id=movie.id)}}" method="POST" style="display: none;" class="reload-on-submit">
+            <input type="date" value="{{date}}" name="date">
+            <button type="submit"><i class="icon-check"></i></button>
+        </form>
+    </td>
+    <td class="expand">
+        {% if movie.type == "series" %}
+        <i class="icon-tv"></i>
+        {% elif movie.type == "movie" %}
+        <i class="icon-film" title="Movie" alt="Movie"></i>
+        {% endif %}
+        <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank" rel="noopener noreferrer">
+            <span>{{movie.title}} ({{movie.year}})</span>
+        </a></td>
+    <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
+    <td class="expand" style="white-space: nowrap;">
+        <form class="rating-form" action="{{url_for('watchlist.rate_item', item_id=movie.id)}}" method="POST" autocomplete="off">
+            {% for i in range(1, 6)[::-1] %}
+            {% set id = movie.imdb_id + date + "-" + i|string  %}
+            <input type="radio" name="rating" value="{{i}}" id="{{id}}" 
+                {% if movie.rating and movie.rating == i %}
+                checked="checked"
+                {% endif %}
+            >
+            <label for="{{id}}"><i></i></label>
+            {% endfor %}
+            {% if not movie.rating %}
+            <input type="radio" name="rating" value="default" checked="checked">
+            {% endif %}
+            
+        </form>
+    </td>
+    <td>
+        <form action="{{url_for('watchlist.remove_history', item_id=movie.id)}}" method="POST" class="reload-on-submit">
+            <button type="submit" class="edit-button"><i class="icon-bin"></i></button>
+        </form>
+    </td>
+</tr>

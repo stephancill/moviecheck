@@ -5,6 +5,7 @@
 {{super()}}
 <link rel="stylesheet" href="/static/css/watchlist.css">
 <link rel="stylesheet" href="/static/css/movie.css">
+<link rel="stylesheet" href="/static/css/rating.css">
 {% endblock %}
 
 {% block title %}Watchlist{% endblock %}
@@ -34,37 +35,11 @@
                     <th>DATE</th>
                     <th>TITLE</th>
                     <th>GENRES</th>
+                    <th>MY RATING</th>
                     <th></th>
                 </tr>
                 {% for movie in history %}
-                <tr>
-                    <td class="shrink date-container" style="padding-right: 40px;">
-                        {% set date = movie.date.strftime('%Y-%m-%d') %}
-                        <div class="date">
-                            {{date}}
-                            <button type="submit"><i class="icon-pencil"></i></button>
-                        </div>
-                        <form action="{{url_for('watchlist.edit_history', item_id=movie.id)}}" method="POST" style="display: none;">
-                            <input type="date" value="{{date}}" name="date">
-                            <button type="submit"><i class="icon-check"></i></button>
-                        </form>
-                    </td>
-                    <td class="expand">
-                        {% if movie.type == "series" %}
-                        <i class="icon-tv"></i>
-                        {% elif movie.type == "movie" %}
-                        <i class="icon-film" title="Movie" alt="Movie"></i>
-                        {% endif %}
-                        <a href="https://www.imdb.com/title/{{movie.imdb_id}}" target="_blank" rel="noopener noreferrer">
-                            <span>{{movie.title}} ({{movie.year}})</span>
-                        </a></td>
-                    <td class="shrink">{{movie.genres|batch(3)|first|join(", ")}}</td>
-                    <td>
-                        <form action="{{url_for('watchlist.remove_history', item_id=movie.id)}}" method="POST">
-                            <button type="submit" class="edit-button"><i class="icon-bin"></i></button>
-                        </form>
-                    </td>
-                </tr>
+                    {% include "components/history-row.html" %}
                 {% endfor %}
             </table>
         </div>
@@ -72,8 +47,6 @@
         <div class="mt-3">
             <a href="{{url_for('import_external.root')}}">Import watch history</a>
         </div>
-        
-        
     </section>
 </div>
 

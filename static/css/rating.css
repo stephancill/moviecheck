@@ -1,0 +1,49 @@
+.rating-form {
+    white-space:nowrap;
+    direction: rtl;
+}
+
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+.rating-form:not(:checked) > input {
+    position:absolute;
+    visibility: hidden;
+    clip:rect(0,0,0,0);
+}
+
+.rating-form:not(:checked) > label {
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+}
+
+.rating-form:not(:checked) > label i:before {
+    content: "\e903";
+}
+
+.rating-form > input:checked ~ label i:before {
+    content: "\e904";
+    /* color: var(--brand-main); */
+}
+
+.rating-form:not(:checked) > label:hover,
+.rating-form:not(:checked) > label:hover ~ label {
+    content: "\e904";
+    color: var(--brand-secondary);
+}
+
+.rating-form > input:checked + label:hover,
+.rating-form > input:checked + label:hover ~ label,
+.rating-form > input:checked ~ label:hover,
+.rating-form > input:checked ~ label:hover ~ label,
+.rating-form > label:hover ~ input:checked ~ label i:before {
+    content: "\e904";
+    color: var(--brand-main);
+}
+
+.rating-form > label:active {
+    position:relative;
+    top:2px;
+    left:2px;
+}

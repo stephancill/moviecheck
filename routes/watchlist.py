@@ -63,7 +63,7 @@ async def root(request, user, watchlist):
 	with db_session():
 		user = User.get(id=user.id)
 		for item in sorted(user.watch_history, key=lambda x: x.date, reverse=True):
-			movie = HistoryMovie(imdb_id=item.imdb_id, id=item.id, date=item.date)
+			movie = HistoryMovie(imdb_id=item.imdb_id, id=item.id, date=item.date, rating=item.rating)
 			history.append(movie)
 	
 	await Movie.batch_populate_details(history)
@@ -123,7 +123,8 @@ async def remove_history(request, user, item_id):
 			date = datetime.strptime(date_string, "%Y-%m-%d")
 			MovieItem.select(
 				lambda m: m.id == item_id and 
-				m.date == date
+				m.date == date and 
+				m.user.id == user.id
 			).delete()
 		else:
 			MovieItem.select(lambda m: m.id == item_id).delete()
@@ -137,6 +138,22 @@ async def edit_history(request, user, item_id):
 	date_string = request.form.get("date")
 	if date_string:
 		with db_session():
-			movie = MovieItem.select(lambda m: m.id == item_id).first()
+			movie = MovieItem.select(lambda m: m.id == item_id and m.user.id == user.id).first()
 			movie.date = datetime.strptime(date_string, "%Y-%m-%d")
 	return response.empty()
+
+@watchlist.route("/rating/<item_id>", methods=["POST"])
+@login_required
+async def rate_item(request, user, item_id):
+	try:
+		rating = int(request.form.get("rating"))
+		with db_session():
+			movie = MovieItem.get(id=item_id)
+			if not movie or movie.user.id != user.id:
+				return response.empty()
+			movie.rating = rating
+	except Exception as e:
+		logger.error(e)
+		
+	return response.empty()
+	
