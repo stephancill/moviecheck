@@ -17,6 +17,7 @@ pony = "*"
 psycopg2-binary = "*"
 premailer = "*"
 beautifulsoup4 = "*"
+httptools = "*"
 
 [requires]
 python_version = "3.6"
